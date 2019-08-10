@@ -1,19 +1,6 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from 'react';
+import Root from './src/Root';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>This is Qure, now published on Expo!</Text>
-    </View>
-  );
+  return <Root />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
