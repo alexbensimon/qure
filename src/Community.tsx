@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export const Community: React.FC = () => {
   const [localValue, setLocalValue] = useState(0);

@@ -1,9 +1,9 @@
-import React from 'react';
 import { AntDesign } from '@expo/vector-icons/';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-import { Home } from './Home';
-import { Discover } from './Discover';
+import React from 'react';
+import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import { Community } from './Community';
+import { Discover } from './Discover';
+import { Home } from './Home';
 import { Profile } from './Profile';
 
 const TabNavigator = createBottomTabNavigator(
