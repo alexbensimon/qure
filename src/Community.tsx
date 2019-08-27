@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
 
-export const Community: React.FunctionComponent = () => {
+export const Community: React.FC = () => {
   const [localValue, setLocalValue] = useState(0);
 
   const doc = firebase

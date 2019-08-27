@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export const Profile: React.FunctionComponent = () => (
+export const Profile: React.FC = () => (
   <View style={styles.container}>
     <Text>Profile</Text>
   </View>

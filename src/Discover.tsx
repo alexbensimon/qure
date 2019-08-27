@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export const Discover: React.FunctionComponent = () => (
+export const Discover: React.FC = () => (
   <View style={styles.container}>
     <Text>Discover</Text>
   </View>

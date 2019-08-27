@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-export const Home: React.FunctionComponent = () => {
+export const Home: React.FC = () => {
   const [coachAdvice, setCoachAdvice] = useState(0);
 
   return (
