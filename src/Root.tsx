@@ -15,7 +15,8 @@ const TabNavigator = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+      tabBarIcon: ({ tintColor }: { tintColor: string }) => {
+        console.log('TCL: tintColor', typeof tintColor);
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === 'Home') {

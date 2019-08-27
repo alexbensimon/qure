@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-export function Home() {
+export const Home: React.FunctionComponent = () => {
   const [coachAdvice, setCoachAdvice] = useState(0);
 
   return (
@@ -12,18 +12,18 @@ export function Home() {
       {coachAdvice === 1 && (
         <TouchableOpacity onPress={() => setCoachAdvice(2)}>
           <Text style={styles.advice}>
-            Bonjour bonjour c'est moi le coach !
+            {"Bonjour bonjour c'est moi le coach !"}
           </Text>
         </TouchableOpacity>
       )}
       {coachAdvice === 2 && (
         <TouchableOpacity onPress={() => setCoachAdvice(0)}>
-          <Text style={styles.advice}>Hey ! C'est encore moi</Text>
+          <Text style={styles.advice}>{"Hey ! C'est encore moi"}</Text>
         </TouchableOpacity>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

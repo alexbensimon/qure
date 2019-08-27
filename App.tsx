@@ -3,6 +3,6 @@ import Root from './src/Root';
 
 import './firebase.config.js';
 
-export default function App() {
-  return <Root />;
-}
+const App: React.FunctionComponent = () => <Root />;
+
+export default App;

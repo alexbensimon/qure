@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export function Community() {
+export const Community: React.FunctionComponent = () => {
   const [localValue, setLocalValue] = useState(0);
 
   const doc = firebase
@@ -15,9 +14,9 @@ export function Community() {
     setLocalValue(res.data().value);
   });
 
-  function incrementInDb() {
+  const incrementInDb = (): void => {
     doc.set({ value: localValue + 1 });
-  }
+  };
 
   return (
     localValue !== 0 && (
@@ -30,7 +29,7 @@ export function Community() {
       </View>
     )
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
