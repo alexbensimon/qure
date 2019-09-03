@@ -10,6 +10,7 @@
   "dependencies": {
     "expo": "^33.0.0",
     "firebase": "^6.4.2",
+    "firesql": "^2.0.2",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
