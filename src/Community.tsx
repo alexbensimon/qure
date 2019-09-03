@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export const Community: React.FC = () => {
-  const [localValue, setLocalValue] = useState(0);
+  const [localValue, setLocalValue] = useState(null);
 
   const doc = firebase
     .firestore()
-    .collection('test')
-    .doc('WJRM1M9xJQg8AIjgUi4O');
+    .collection('tests')
+    .doc('CjNUwAnFznsZTwvsILw1');
 
   doc.onSnapshot(res => {
     setLocalValue(res.data().value);
@@ -19,7 +19,7 @@ export const Community: React.FC = () => {
   };
 
   return (
-    localValue !== 0 && (
+    localValue !== null && (
       <View style={styles.container}>
         <Text>Community</Text>
         <Text>{localValue}</Text>
