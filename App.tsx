@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import './firebase.config.js';
 import Root from './src/Root';
 
-const App: React.FC = () => <Root />;
+const App: FC = () => <Root />;
 
 export default App;

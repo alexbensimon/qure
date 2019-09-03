@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { FC } from 'react';
 import TabNavigator from './TabNavigator';
 
-const Root: React.FC = () => <TabNavigator />;
+const Root: FC = () => <TabNavigator />;
 
 export default Root;

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-elements';
 
-export const Profile: React.FC = () => (
+export const Profile: FC = () => (
   <View style={styles.container}>
     <Text>Profile</Text>
     <Button title="Awesome button from UI kit"></Button>

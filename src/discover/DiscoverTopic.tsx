@@ -1,9 +1,8 @@
 import firebase from 'firebase';
 import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
 import { Challenge } from '../globalTypes';
 
 type Props = {
