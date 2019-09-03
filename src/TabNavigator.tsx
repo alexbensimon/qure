@@ -21,11 +21,11 @@ const TabNavigator = createBottomTabNavigator(
         if (routeName === 'Home') {
           iconName = 'home';
         } else if (routeName === 'Découvrir') {
-          iconName = `find`;
+          iconName = 'find';
         } else if (routeName === 'Communauté') {
-          iconName = `earth`;
+          iconName = 'earth';
         } else if (routeName === 'Profil') {
-          iconName = `user`;
+          iconName = 'user';
         }
 
         return <AntDesign name={iconName} size={25} color={tintColor} />;
