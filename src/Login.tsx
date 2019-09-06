@@ -1,4 +1,5 @@
 import * as Facebook from 'expo-facebook';
+import firebase from 'firebase';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -20,8 +21,17 @@ export const Login: FC<Props> = ({ logIn }) => {
         behavior: 'native',
         permissions: ['public_profile'],
       });
-      console.log('TCL: logIn -> type', type);
       if (type === 'success') {
+        // Build Firebase credential with the Facebook access token.
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        // Sign in with credential from the Facebook user.
+        firebase
+          .auth()
+          .signInWithCredential(credential)
+          .catch(error => {
+            // Handle Errors here.
+          });
+
         // Get the user's name using Facebook's Graph API
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}`,
