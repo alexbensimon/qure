@@ -22,11 +22,14 @@ export class DiscoverChallenges extends Component<Props, State> {
 
   async componentDidMount() {
     const fireSQL = new FireSQL(firebase.firestore());
-    const challenges = (await fireSQL.query(`
+    const challenges = (await fireSQL.query(
+      `
       SELECT *
       FROM challenges
       WHERE topic = '${this.props.topic}'
-    `)) as Array<Challenge>;
+    `,
+      { includeId: 'id' },
+    )) as Array<Challenge>;
     this.setState({ challenges });
   }
 

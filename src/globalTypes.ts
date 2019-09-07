@@ -4,6 +4,7 @@ export type User = {
 };
 
 export type Challenge = {
+  id: string;
   topic: string;
   title: string;
   subTitle: string;
