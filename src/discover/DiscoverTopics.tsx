@@ -3,7 +3,7 @@ import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { Button, Card } from 'react-native-elements';
 import { Challenge } from '../globalTypes';
-import { DiscoverTopic } from './DiscoverTopic';
+import { DiscoverChallenges } from './DiscoverChallenges';
 
 type State = {
   topics: Array<Challenge['topic']>;
@@ -50,7 +50,7 @@ export class DiscoverTopics extends Component<{}, State> {
               title="Catégories"
               onPress={() => this.setState({ currentTopic: '' })}
             ></Button>
-            <DiscoverTopic topic={currentTopic} />
+            <DiscoverChallenges topic={currentTopic} />
           </>
         )}
       </>

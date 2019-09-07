@@ -2,6 +2,7 @@ import React, { useState, FC, useContext } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import { UserContext } from './UserContext';
 import { Text } from 'react-native-elements';
+import { ChallengesTaken } from './ChallengesTaken';
 
 export const Home: FC = () => {
   const [coachAdvice, setCoachAdvice] = useState(0);
@@ -15,6 +16,7 @@ export const Home: FC = () => {
           <Text>{JSON.stringify(user, null, 2)}</Text>
         </ScrollView>
       </View>
+      <ChallengesTaken />
       <View style={styles.container}>
         <TouchableOpacity onPress={() => setCoachAdvice(1)}>
           <Text style={styles.coachIcon}>👨‍🏫</Text>
