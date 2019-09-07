@@ -1,27 +1,35 @@
+import firebase from 'firebase';
 import React, { Component } from 'react';
-import TabNavigator from './TabNavigator';
+import { User } from './globalTypes';
 import { Login } from './Login';
+import TabNavigator from './TabNavigator';
 import { UserProvider } from './UserContext';
 
 type State = {
   loggedIn: boolean;
-  userName: string;
+  user: User | null;
 };
 
 export default class Root extends Component<{}, State> {
   state: State = {
     loggedIn: false,
-    userName: '',
+    user: null,
   };
 
-  logIn = (userName: string) => {
-    this.setState({ loggedIn: true, userName });
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      this.setState({ user });
+    });
+  }
+
+  logIn = () => {
+    this.setState({ loggedIn: true });
   };
 
   render() {
-    const { loggedIn, userName } = this.state;
+    const { loggedIn, user } = this.state;
     return loggedIn ? (
-      <UserProvider userName={userName}>
+      <UserProvider user={user}>
         <TabNavigator />
       </UserProvider>
     ) : (

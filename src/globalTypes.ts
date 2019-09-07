@@ -1,3 +1,8 @@
+export type User = {
+  uid: string;
+  displayName: string;
+};
+
 export type Challenge = {
   topic: string;
   title: string;

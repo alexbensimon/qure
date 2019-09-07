@@ -1,14 +1,13 @@
 import React, { FC, createContext, ReactNode } from 'react';
+import { User } from './globalTypes';
 
 type Props = {
-  userName: string;
+  user: User;
   children: ReactNode;
 };
 
-export const UserProvider: FC<Props> = ({ userName, children }) => (
-  <UserContext.Provider value={{ userName }}>{children}</UserContext.Provider>
+export const UserProvider: FC<Props> = ({ user, children }) => (
+  <UserContext.Provider value={user}>{children}</UserContext.Provider>
 );
 
-export const UserContext = createContext<{
-  userName?: string;
-}>({});
+export const UserContext = createContext<User | null>(null);

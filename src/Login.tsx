@@ -5,44 +5,33 @@ import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 
 type Props = {
-  logIn: (userName: string) => void;
+  logIn: () => void;
 };
 
 export const Login: FC<Props> = ({ logIn }) => {
   async function facebookLogIn() {
     try {
-      const {
-        type,
-        token,
-        // expires,
-        // permissions,
-        // declinedPermissions,
-      } = await Facebook.logInWithReadPermissionsAsync('2808452099169831', {
-        behavior: 'native',
-        permissions: ['public_profile'],
-      });
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+        '2808452099169831',
+        {
+          behavior: 'native',
+          permissions: ['public_profile'],
+        },
+      );
       if (type === 'success') {
-        // Build Firebase credential with the Facebook access token.
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        // Sign in with credential from the Facebook user.
         firebase
           .auth()
           .signInWithCredential(credential)
           .catch(error => {
-            // Handle Errors here.
+            console.log('Oups! Firebase signInWithCredential error: ', error);
           });
-
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`,
-        );
-        const { name } = await response.json();
-        logIn(name);
+        logIn();
       } else {
-        console.log('type not success, type: ', type);
+        console.log('Oups! Type not success, type: ', type);
       }
     } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+      console.log('Oups! Facebook Login Error: ', message);
     }
   }
 

@@ -1,18 +1,19 @@
 import React, { useState, FC, useContext } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import { UserContext } from './UserContext';
 import { Text } from 'react-native-elements';
 
 export const Home: FC = () => {
   const [coachAdvice, setCoachAdvice] = useState(0);
-  const { userName } = useContext(UserContext);
+  const user = useContext(UserContext);
 
   return (
     <>
       <View style={styles.centerContainer}>
-        <Text h3>
-          Hey, I now know from Facebook that your name is {userName} 😏
-        </Text>
+        <Text h3>user data</Text>
+        <ScrollView>
+          <Text>{JSON.stringify(user, null, 2)}</Text>
+        </ScrollView>
       </View>
       <View style={styles.container}>
         <TouchableOpacity onPress={() => setCoachAdvice(1)}>
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 40,
   },
   container: {
     flex: 1,

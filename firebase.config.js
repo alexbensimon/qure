@@ -8,13 +8,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// Listen for authentication state to change.
-firebase.auth().onAuthStateChanged(user => {
-  if (user != null) {
-    console.log('We are authenticated now!');
-  }
-});
-
 // Add info to user object
 // firebase
 //   .database()
