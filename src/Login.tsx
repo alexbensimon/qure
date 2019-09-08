@@ -35,7 +35,7 @@ export const Login: FC = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Login with Facebook" onPress={facebookLogIn}></Button>
+      <Button title="Connexion avec Facebook" onPress={facebookLogIn}></Button>
     </View>
   );
 };

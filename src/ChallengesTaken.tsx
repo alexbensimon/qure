@@ -3,7 +3,7 @@ import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { UserContext } from './UserContext';
 import { Challenge } from './globalTypes';
-import { ScrollView } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 
 type State = {
@@ -68,7 +68,7 @@ export class ChallengesTaken extends Component<{}, State> {
   render() {
     const { challenges } = this.state;
     return (
-      <>
+      <View style={styles.container}>
         <ScrollView>
           {challenges.map(challenge => (
             <Card title={challenge.title} key={challenge.title}>
@@ -80,7 +80,13 @@ export class ChallengesTaken extends Component<{}, State> {
           ))}
         </ScrollView>
         <Button title="🙏" onPress={this.fetchData}></Button>
-      </>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+  },
+});

@@ -6,13 +6,13 @@ import TabNavigator from './TabNavigator';
 import { UserProvider } from './UserContext';
 
 type State = {
-  loggedIn: boolean;
+  loggedIn: boolean | null;
   user: User | null;
 };
 
 export default class Root extends Component<{}, State> {
   state: State = {
-    loggedIn: false,
+    loggedIn: null,
     user: null,
   };
 
@@ -24,12 +24,13 @@ export default class Root extends Component<{}, State> {
 
   render() {
     const { loggedIn, user } = this.state;
-    return loggedIn ? (
+    if (loggedIn === null && user === null) return null;
+    return loggedIn === false ? (
+      <Login />
+    ) : (
       <UserProvider user={user}>
         <TabNavigator />
       </UserProvider>
-    ) : (
-      <Login />
     );
   }
 }

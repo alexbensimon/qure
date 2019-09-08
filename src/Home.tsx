@@ -1,21 +1,13 @@
-import React, { useState, FC, useContext } from 'react';
-import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
-import { UserContext } from './UserContext';
+import React, { FC, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { ChallengesTaken } from './ChallengesTaken';
 
 export const Home: FC = () => {
   const [coachAdvice, setCoachAdvice] = useState(0);
-  const user = useContext(UserContext);
 
   return (
     <>
-      <View style={styles.centerContainer}>
-        <Text h3>user data</Text>
-        <ScrollView>
-          <Text>{JSON.stringify(user, null, 2)}</Text>
-        </ScrollView>
-      </View>
       <ChallengesTaken />
       <View style={styles.container}>
         <TouchableOpacity onPress={() => setCoachAdvice(1)}>
@@ -39,13 +31,6 @@ export const Home: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  centerContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
   container: {
     flex: 1,
     flexDirection: 'row',
