@@ -4,11 +4,7 @@ import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 
-type Props = {
-  logIn: () => void;
-};
-
-export const Login: FC<Props> = ({ logIn }) => {
+export const Login: FC = () => {
   async function facebookLogIn() {
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
@@ -19,6 +15,9 @@ export const Login: FC<Props> = ({ logIn }) => {
         },
       );
       if (type === 'success') {
+        await firebase
+          .auth()
+          .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         firebase
           .auth()
@@ -26,7 +25,6 @@ export const Login: FC<Props> = ({ logIn }) => {
           .catch(error => {
             console.log('Oups! Firebase signInWithCredential error: ', error);
           });
-        logIn();
       } else {
         console.log('Oups! Type not success, type: ', type);
       }

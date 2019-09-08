@@ -18,13 +18,9 @@ export default class Root extends Component<{}, State> {
 
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      this.setState({ user });
+      this.setState({ user, loggedIn: Boolean(user) });
     });
   }
-
-  logIn = () => {
-    this.setState({ loggedIn: true });
-  };
 
   render() {
     const { loggedIn, user } = this.state;
@@ -33,7 +29,7 @@ export default class Root extends Component<{}, State> {
         <TabNavigator />
       </UserProvider>
     ) : (
-      <Login logIn={this.logIn} />
+      <Login />
     );
   }
 }
