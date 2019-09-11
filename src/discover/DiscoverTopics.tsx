@@ -1,13 +1,13 @@
 import firebase from 'firebase';
 import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
-import { Button, Card } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
-import { NavigationScreenProps } from 'react-navigation';
 
 type State = {
   topics: Array<Challenge['topic']>;
-  currentTopic: Challenge['topic'];
 };
 
 type Props = NavigationScreenProps;
@@ -15,7 +15,6 @@ type Props = NavigationScreenProps;
 export class DiscoverTopics extends Component<Props, State> {
   state: State = {
     topics: [],
-    currentTopic: '',
   };
 
   async componentDidMount() {
@@ -32,22 +31,27 @@ export class DiscoverTopics extends Component<Props, State> {
 
   render() {
     const { navigation } = this.props;
-    const { topics, currentTopic } = this.state;
+    const { topics } = this.state;
     return (
-      <>
-        {!currentTopic && (
-          <>
-            {topics.map(topic => (
-              <Card title={topic} key={topic}>
-                <Button
-                  title="+"
-                  onPress={() => navigation.push('Challenges', { topic })}
-                ></Button>
-              </Card>
-            ))}
-          </>
-        )}
-      </>
+      <ScrollView contentContainerStyle={styles.container}>
+        {topics.map(topic => (
+          <Button
+            title={topic}
+            key={topic}
+            onPress={() => navigation.push('Challenges', { topic })}
+            style={styles.topic}
+          ></Button>
+        ))}
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+  topic: {
+    marginTop: 40,
+  },
+});

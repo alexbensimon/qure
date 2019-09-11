@@ -9,13 +9,11 @@ type Props = NavigationScreenProps;
 
 type State = {
   challenges: Array<Challenge>;
-  currentChallenge: Challenge | null;
 };
 
 export class DiscoverChallenges extends Component<Props, State> {
   state: State = {
     challenges: [],
-    currentChallenge: null,
   };
 
   async componentDidMount() {
@@ -34,21 +32,17 @@ export class DiscoverChallenges extends Component<Props, State> {
 
   render() {
     const { navigation } = this.props;
-    const { challenges, currentChallenge } = this.state;
+    const { challenges } = this.state;
     return (
       <>
-        {!currentChallenge && (
-          <>
-            {challenges.map(challenge => (
-              <Card title={challenge.title} key={challenge.title}>
-                <Button
-                  title="+"
-                  onPress={() => navigation.push('Challenge', { challenge })}
-                ></Button>
-              </Card>
-            ))}
-          </>
-        )}
+        {challenges.map(challenge => (
+          <Card title={challenge.title} key={challenge.title}>
+            <Button
+              title="+"
+              onPress={() => navigation.push('Challenge', { challenge })}
+            ></Button>
+          </Card>
+        ))}
       </>
     );
   }
