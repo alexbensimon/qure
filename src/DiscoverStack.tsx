@@ -14,7 +14,7 @@ export const DiscoverStack = createStackNavigator(
     Challenges: {
       screen: DiscoverChallenges,
       navigationOptions: ({ navigation }) => ({
-        title: `Défis ${navigation.state.params.topic}`,
+        title: `${navigation.state.params.topic} : défis`,
       }),
     },
     Challenge: {

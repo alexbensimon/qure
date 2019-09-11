@@ -39,7 +39,7 @@ export class DiscoverTopics extends Component<Props, State> {
             title={topic}
             key={topic}
             onPress={() => navigation.push('Challenges', { topic })}
-            style={styles.topic}
+            buttonStyle={styles.topic}
           ></Button>
         ))}
       </ScrollView>
@@ -49,9 +49,12 @@ export class DiscoverTopics extends Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   topic: {
     marginTop: 40,
+    height: 100,
+    marginRight: 10,
+    marginLeft: 10,
   },
 });

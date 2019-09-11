@@ -1,9 +1,10 @@
 import firebase from 'firebase';
 import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
-import { Button, Card } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
-import { NavigationScreenProps } from 'react-navigation';
 
 type Props = NavigationScreenProps;
 
@@ -34,16 +35,28 @@ export class DiscoverChallenges extends Component<Props, State> {
     const { navigation } = this.props;
     const { challenges } = this.state;
     return (
-      <>
+      <ScrollView contentContainerStyle={styles.container}>
         {challenges.map(challenge => (
-          <Card title={challenge.title} key={challenge.title}>
-            <Button
-              title="+"
-              onPress={() => navigation.push('Challenge', { challenge })}
-            ></Button>
-          </Card>
+          <Button
+            title={challenge.title}
+            key={challenge.title}
+            onPress={() => navigation.push('Challenge', { challenge })}
+            buttonStyle={styles.challenge}
+          ></Button>
         ))}
-      </>
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+  },
+  challenge: {
+    marginTop: 40,
+    height: 100,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+});

@@ -1,11 +1,11 @@
 import firebase from 'firebase';
 import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import { Button, Card, Text } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { UserContext } from '../UserContext';
-import { NavigationScreenProps } from 'react-navigation';
 
 type Props = NavigationScreenProps;
 
@@ -54,18 +54,48 @@ export class DiscoverChallenge extends Component<Props, State> {
     }: Challenge = navigation.getParam('challenge');
     const { challengeTaken } = this.state;
     return (
-      <Card title={title} key={title}>
-        <View>
-          <Text>{subTitle}</Text>
-          <Text>{description}</Text>
-          <Text>{rules}</Text>
-          <Text>{duration}</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text h1 style={styles.text}>
+          {title}
+        </Text>
+        <Text h2 style={styles.text}>
+          {subTitle}
+        </Text>
+        <Text h3 style={styles.text}>
+          Pourquoi ? {description}
+        </Text>
+        <Text h4 style={styles.text}>
+          Règles :
+        </Text>
+        {rules.map(rule => (
+          <Text h4 key={rule}>
+            - {rule}
+          </Text>
+        ))}
+        <Text h4 style={styles.text}>
+          Durée : {duration} jours
+        </Text>
+        <View style={styles.challengeTakenContainer}>
           {challengeTaken === false && (
             <Button title="💪" onPress={this.takeChallenge}></Button>
           )}
           {challengeTaken === true && <Text>✅</Text>}
         </View>
-      </Card>
+      </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginRight: 20,
+    marginLeft: 20,
+  },
+  text: {
+    marginTop: 30,
+  },
+  challengeTakenContainer: {
+    marginTop: 30,
+    marginBottom: 30,
+  },
+});
