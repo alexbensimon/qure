@@ -5,16 +5,15 @@ import { View } from 'react-native';
 import { Button, Card, Text } from 'react-native-elements';
 import { Challenge } from '../globalTypes';
 import { UserContext } from '../UserContext';
+import { NavigationScreenProps } from 'react-navigation';
 
-type Props = {
-  challenge: Challenge;
-};
+type Props = NavigationScreenProps;
 
 type State = {
   challengeTaken: boolean | null;
 };
 
-export class ChallengeInfo extends Component<Props, State> {
+export class DiscoverChallenge extends Component<Props, State> {
   static contextType = UserContext;
 
   state: State = {
@@ -22,30 +21,37 @@ export class ChallengeInfo extends Component<Props, State> {
   };
 
   async componentDidMount() {
+    const challenge: Challenge = this.props.navigation.getParam('challenge');
     const fireSQL = new FireSQL(firebase.firestore());
     const res = await fireSQL.query(`
       SELECT *
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}' AND challengeId = '${this.props.challenge.id}'
+      WHERE userId = '${this.context.uid}' AND challengeId = '${challenge.id}'
     `);
     this.setState({ challengeTaken: res.length > 0 });
   }
 
   takeChallenge = () => {
+    const challenge: Challenge = this.props.navigation.getParam('challenge');
     this.setState({ challengeTaken: true });
     firebase
       .firestore()
       .collection('challengesTakenByUsers')
       .add({
-        challengeId: this.props.challenge.id,
+        challengeId: challenge.id,
         userId: this.context.uid,
       });
   };
 
   render() {
+    const { navigation } = this.props;
     const {
-      challenge: { title, subTitle, description, rules, duration },
-    } = this.props;
+      title,
+      subTitle,
+      description,
+      rules,
+      duration,
+    }: Challenge = navigation.getParam('challenge');
     const { challengeTaken } = this.state;
     return (
       <Card title={title} key={title}>

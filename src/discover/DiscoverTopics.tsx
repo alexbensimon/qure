@@ -3,14 +3,16 @@ import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { Button, Card } from 'react-native-elements';
 import { Challenge } from '../globalTypes';
-import { DiscoverChallenges } from './DiscoverChallenges';
+import { NavigationScreenProps } from 'react-navigation';
 
 type State = {
   topics: Array<Challenge['topic']>;
   currentTopic: Challenge['topic'];
 };
 
-export class DiscoverTopics extends Component<{}, State> {
+type Props = NavigationScreenProps;
+
+export class DiscoverTopics extends Component<Props, State> {
   state: State = {
     topics: [],
     currentTopic: '',
@@ -29,28 +31,20 @@ export class DiscoverTopics extends Component<{}, State> {
   }
 
   render() {
+    const { navigation } = this.props;
     const { topics, currentTopic } = this.state;
     return (
       <>
         {!currentTopic && (
-          <Card title="Catégories">
+          <>
             {topics.map(topic => (
               <Card title={topic} key={topic}>
                 <Button
                   title="+"
-                  onPress={() => this.setState({ currentTopic: topic })}
+                  onPress={() => navigation.push('Challenges', { topic })}
                 ></Button>
               </Card>
             ))}
-          </Card>
-        )}
-        {!!currentTopic && (
-          <>
-            <Button
-              title="Catégories"
-              onPress={() => this.setState({ currentTopic: '' })}
-            ></Button>
-            <DiscoverChallenges topic={currentTopic} />
           </>
         )}
       </>

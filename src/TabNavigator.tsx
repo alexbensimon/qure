@@ -1,19 +1,21 @@
 import { AntDesign } from '@expo/vector-icons/';
 import React from 'react';
-import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Community } from './Community';
-import { Discover } from './Discover';
+import { DiscoverStack } from './DiscoverStack';
 import { Home } from './Home';
 import { Profile } from './Profile';
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: Home,
-    Découvrir: Discover,
+    Découvrir: DiscoverStack,
     Communauté: Community,
     Profil: Profile,
   },
   {
+    // @ts-ignore
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ tintColor }: { tintColor: string }) => {
         const { routeName } = navigation.state;
@@ -34,4 +36,5 @@ const TabNavigator = createBottomTabNavigator(
   },
 );
 
+// @ts-ignore
 export default createAppContainer(TabNavigator);

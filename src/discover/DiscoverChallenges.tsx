@@ -3,11 +3,9 @@ import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { Button, Card } from 'react-native-elements';
 import { Challenge } from '../globalTypes';
-import { ChallengeInfo } from './ChallengeInfo';
+import { NavigationScreenProps } from 'react-navigation';
 
-type Props = {
-  topic: Challenge['topic'];
-};
+type Props = NavigationScreenProps;
 
 type State = {
   challenges: Array<Challenge>;
@@ -21,12 +19,13 @@ export class DiscoverChallenges extends Component<Props, State> {
   };
 
   async componentDidMount() {
+    const topic: Challenge['topic'] = this.props.navigation.getParam('topic');
     const fireSQL = new FireSQL(firebase.firestore());
     const challenges = (await fireSQL.query(
       `
       SELECT *
       FROM challenges
-      WHERE topic = '${this.props.topic}'
+      WHERE topic = '${topic}'
     `,
       { includeId: 'id' },
     )) as Array<Challenge>;
@@ -34,29 +33,20 @@ export class DiscoverChallenges extends Component<Props, State> {
   }
 
   render() {
-    const { topic } = this.props;
+    const { navigation } = this.props;
     const { challenges, currentChallenge } = this.state;
     return (
       <>
         {!currentChallenge && (
-          <Card title={`Catégorie : ${topic}`}>
+          <>
             {challenges.map(challenge => (
               <Card title={challenge.title} key={challenge.title}>
                 <Button
                   title="+"
-                  onPress={() => this.setState({ currentChallenge: challenge })}
+                  onPress={() => navigation.push('Challenge', { challenge })}
                 ></Button>
               </Card>
             ))}
-          </Card>
-        )}
-        {!!currentChallenge && (
-          <>
-            <Button
-              title="Challenges"
-              onPress={() => this.setState({ currentChallenge: null })}
-            ></Button>
-            <ChallengeInfo challenge={currentChallenge} />
           </>
         )}
       </>
