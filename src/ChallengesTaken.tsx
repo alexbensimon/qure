@@ -1,13 +1,18 @@
 import firebase from 'firebase';
 import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
-import { UserContext } from './UserContext';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-elements';
+import { ChallengeTaken } from './ChallengeTaken';
 import { Challenge } from './globalTypes';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { UserContext } from './UserContext';
 
 type State = {
   challenges: Array<Challenge>;
+  challengesTaken: Array<{
+    challengeId: Challenge['id'];
+    timestamp: number;
+  }>;
 };
 
 export class ChallengesTaken extends Component<{}, State> {
@@ -15,6 +20,7 @@ export class ChallengesTaken extends Component<{}, State> {
 
   state: State = {
     challenges: [],
+    challengesTaken: [],
   };
 
   componentDidMount() {
@@ -23,11 +29,11 @@ export class ChallengesTaken extends Component<{}, State> {
 
   fetchData = async () => {
     const fireSQL = new FireSQL(firebase.firestore());
-    const challengeIdsObjects = await fireSQL.query(`
-      SELECT challengeId
+    const challengeIdsObjects = (await fireSQL.query(`
+      SELECT challengeId, timestamp
       FROM challengesTakenByUsers
       WHERE userId = '${this.context.uid}'
-    `);
+    `)) as State['challengesTaken'];
     if (challengeIdsObjects.length > 0) {
       const challengeIds = challengeIdsObjects
         .map(obj => `'${obj.challengeId}'`)
@@ -40,7 +46,7 @@ export class ChallengesTaken extends Component<{}, State> {
       `,
         { includeId: 'id' },
       )) as Array<Challenge>;
-      this.setState({ challenges });
+      this.setState({ challenges, challengesTaken: challengeIdsObjects });
     } else {
       this.setState({ challenges: [] });
     }
@@ -66,17 +72,21 @@ export class ChallengesTaken extends Component<{}, State> {
   };
 
   render() {
-    const { challenges } = this.state;
+    const { challenges, challengesTaken } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView>
           {challenges.map(challenge => (
-            <Card title={challenge.title} key={challenge.title}>
-              <Button
-                title="🔴"
-                onPress={() => this.removeChallenge(challenge.id)}
-              ></Button>
-            </Card>
+            <ChallengeTaken
+              key={challenge.id}
+              challenge={challenge}
+              timestamp={
+                challengesTaken.find(
+                  challengeTaken => challengeTaken.challengeId === challenge.id,
+                ).timestamp
+              }
+              removeChallenge={this.removeChallenge}
+            />
           ))}
         </ScrollView>
         <Button title="🙏" onPress={this.fetchData}></Button>

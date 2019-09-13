@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "date-fns": "^2.2.1",
     "expo": "^34.0.4",
     "expo-facebook": "~6.0.0",
     "firebase": "^6.4.2",
