@@ -1,38 +1,57 @@
-import React, { Component } from 'react';
-import { Challenge } from './globalTypes';
 import {
-  toDate,
   addDays,
-  differenceInSeconds,
   differenceInDays,
   differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
   subDays,
   subHours,
-  differenceInMinutes,
   subMinutes,
+  toDate,
+  isAfter,
 } from 'date-fns';
-import { Card, Text, Button } from 'react-native-elements';
+import firebase from 'firebase';
+import React, { Component } from 'react';
+import { Button, Card, Text } from 'react-native-elements';
+import { Challenge, ChallengeTakenType } from './globalTypes';
 
 type Props = {
   challenge: Challenge;
-  timestamp: number;
+  challengeTaken: ChallengeTakenType;
   removeChallenge: (challengeId: string) => void;
 };
 
 type State = {
   timeRemaining: string;
+  done: boolean;
 };
 
 export class ChallengeTaken extends Component<Props, State> {
   state: State = {
     timeRemaining: '',
+    done: false,
+  };
+
+  succeedChallenge = () => {
+    this.setState({ done: true });
+    firebase
+      .firestore()
+      .collection('challengesTakenByUsers')
+      .doc(this.props.challengeTaken.id)
+      .set({ done: true });
   };
 
   async componentDidMount() {
-    const startDate = toDate(this.props.timestamp);
+    const startDate = toDate(this.props.challengeTaken.timestamp);
     const endDate = addDays(startDate, this.props.challenge.duration);
-    setInterval(() => {
+    const interval = setInterval(() => {
       const now = toDate(Date.now());
+
+      if (isAfter(now, endDate)) {
+        this.succeedChallenge();
+        clearInterval(interval);
+      }
+
       const daysRemaining = differenceInDays(endDate, now);
       const endDateMinusDays = subDays(endDate, daysRemaining);
       const hoursRemaining = differenceInHours(endDateMinusDays, now);
@@ -59,14 +78,20 @@ export class ChallengeTaken extends Component<Props, State> {
 
   render() {
     const { challenge, removeChallenge } = this.props;
-    const { timeRemaining } = this.state;
+    const { timeRemaining, done } = this.state;
     return (
       <Card title={challenge.title}>
-        <Text>{timeRemaining}</Text>
-        <Button
-          title="❌ Fail"
-          onPress={() => removeChallenge(challenge.id)}
-        ></Button>
+        {done ? (
+          <Text>✅</Text>
+        ) : (
+          <>
+            <Text>{timeRemaining}</Text>
+            <Button
+              title="❌ Fail"
+              onPress={() => removeChallenge(challenge.id)}
+            ></Button>
+          </>
+        )}
       </Card>
     );
   }

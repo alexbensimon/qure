@@ -4,15 +4,12 @@ import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ChallengeTaken } from './ChallengeTaken';
-import { Challenge } from './globalTypes';
+import { Challenge, ChallengeTakenType } from './globalTypes';
 import { UserContext } from './UserContext';
 
 type State = {
   challenges: Array<Challenge>;
-  challengesTaken: Array<{
-    challengeId: Challenge['id'];
-    timestamp: number;
-  }>;
+  challengesTaken: Array<ChallengeTakenType>;
 };
 
 export class ChallengesTaken extends Component<{}, State> {
@@ -23,17 +20,20 @@ export class ChallengesTaken extends Component<{}, State> {
     challengesTaken: [],
   };
 
-  componentDidMount() {
-    this.fetchData();
+  async componentDidMount() {
+    await this.fetchData();
   }
 
   fetchData = async () => {
     const fireSQL = new FireSQL(firebase.firestore());
-    const challengeIdsObjects = (await fireSQL.query(`
-      SELECT challengeId, timestamp
+    const challengeIdsObjects = (await fireSQL.query(
+      `
+      SELECT *
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}'
-    `)) as State['challengesTaken'];
+      WHERE userId = '${this.context.uid}' AND done = false
+    `,
+      { includeId: 'id' },
+    )) as State['challengesTaken'];
     if (challengeIdsObjects.length > 0) {
       const challengeIds = challengeIdsObjects
         .map(obj => `'${obj.challengeId}'`)
@@ -80,11 +80,9 @@ export class ChallengesTaken extends Component<{}, State> {
             <ChallengeTaken
               key={challenge.id}
               challenge={challenge}
-              timestamp={
-                challengesTaken.find(
-                  challengeTaken => challengeTaken.challengeId === challenge.id,
-                ).timestamp
-              }
+              challengeTaken={challengesTaken.find(
+                challengeTaken => challengeTaken.challengeId === challenge.id,
+              )}
               removeChallenge={this.removeChallenge}
             />
           ))}

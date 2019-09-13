@@ -12,3 +12,10 @@ export type Challenge = {
   rules: Array<string>;
   duration: number;
 };
+
+export type ChallengeTakenType = {
+  id: string;
+  challengeId: Challenge['id'];
+  timestamp: number;
+  done: boolean;
+};
