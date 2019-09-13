@@ -41,6 +41,7 @@ export class DiscoverChallenge extends Component<Props, State> {
         challengeId: challenge.id,
         userId: this.context.uid,
         timestamp: Date.now(),
+        done: false,
       });
   };
 
