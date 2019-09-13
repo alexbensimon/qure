@@ -38,7 +38,7 @@ export class ChallengeTaken extends Component<Props, State> {
       .firestore()
       .collection('challengesTakenByUsers')
       .doc(this.props.challengeTaken.id)
-      .set({ done: true });
+      .set({ done: true }, { merge: true });
   };
 
   async componentDidMount() {
