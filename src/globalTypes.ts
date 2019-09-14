@@ -11,6 +11,7 @@ export type Challenge = {
   description: string;
   rules: Array<string>;
   duration: number;
+  level: number;
 };
 
 export type ChallengeTakenType = {

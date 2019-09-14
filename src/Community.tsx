@@ -1,35 +1,72 @@
+import React, { Component } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { UserContext } from './UserContext';
+import { FireSQL } from 'firesql';
 import firebase from 'firebase';
-import React, { FC, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Challenge } from './globalTypes';
+import { Text } from 'react-native-elements';
 
-export const Community: FC = () => {
-  const [localValue, setLocalValue] = useState(null);
+type State = {
+  challengesSucceed: Array<Challenge>;
+};
 
-  const doc = firebase
-    .firestore()
-    .collection('tests')
-    .doc('CjNUwAnFznsZTwvsILw1');
+export class Community extends Component<{}, State> {
+  static contextType = UserContext;
 
-  doc.onSnapshot(res => {
-    setLocalValue(res.data().value);
-  });
-
-  const incrementInDb = (): void => {
-    doc.set({ value: localValue + 1 });
+  state: State = {
+    challengesSucceed: [],
   };
 
-  return (
-    localValue !== null && (
+  async componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = async () => {
+    const fireSQL = new FireSQL(firebase.firestore());
+    const challengeIdsObjects = await fireSQL.query(
+      `
+      SELECT challengeId
+      FROM challengesTakenByUsers
+      WHERE userId = '${this.context.uid}' AND done = true
+    `,
+    );
+    if (challengeIdsObjects.length > 0) {
+      const challengeIds = challengeIdsObjects
+        .map(obj => `'${obj.challengeId}'`)
+        .join(', ');
+      const challengesSucceed = (await fireSQL.query(
+        `
+        SELECT *
+        FROM challenges
+        WHERE __name__ IN ( ${challengeIds} )
+      `,
+        { includeId: 'id' },
+      )) as Array<Challenge>;
+      this.setState({ challengesSucceed });
+    } else {
+      this.setState({ challengesSucceed: [] });
+    }
+  };
+
+  render() {
+    const { challengesSucceed } = this.state;
+    console.log(
+      'TCL: Community -> render -> challengesSucceed',
+      challengesSucceed,
+    );
+    return (
       <View style={styles.container}>
-        <Text>Community</Text>
-        <Text>{localValue}</Text>
-        <TouchableOpacity onPress={incrementInDb}>
-          <Text style={styles.plus}>+</Text>
-        </TouchableOpacity>
+        <Text h3>
+          Points :{' '}
+          {challengesSucceed.reduce(
+            (previousValue, currentValue) => previousValue + currentValue.level,
+            0,
+          )}
+        </Text>
       </View>
-    )
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -37,8 +74,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  plus: {
-    fontSize: 40,
   },
 });
