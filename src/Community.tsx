@@ -50,10 +50,6 @@ export class Community extends Component<{}, State> {
 
   render() {
     const { challengesSucceed } = this.state;
-    console.log(
-      'TCL: Community -> render -> challengesSucceed',
-      challengesSucceed,
-    );
     return (
       <View style={styles.container}>
         <Text h3>

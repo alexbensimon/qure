@@ -23,12 +23,15 @@ export const Login: FC = () => {
           .auth()
           .signInWithCredential(credential)
           .catch(error => {
+            // eslint-disable-next-line no-console
             console.log('Oups! Firebase signInWithCredential error: ', error);
           });
       } else {
+        // eslint-disable-next-line no-console
         console.log('Oups! Type not success, type: ', type);
       }
     } catch ({ message }) {
+      // eslint-disable-next-line no-console
       console.log('Oups! Facebook Login Error: ', message);
     }
   }
