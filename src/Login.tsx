@@ -44,6 +44,7 @@ export const Login: FC = () => {
       <Button
         buttonStyle={styles.button}
         titleStyle={styles.buttonTitle}
+        containerStyle={styles.buttonContainer}
         title="Connexion avec Facebook"
         icon={
           <Icon
@@ -75,6 +76,9 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    marginBottom: 100,
   },
   iconContainer: {
     marginRight: 8,
