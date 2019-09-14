@@ -2,7 +2,7 @@ import * as Facebook from 'expo-facebook';
 import firebase from 'firebase';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Icon, Text } from 'react-native-elements';
 
 export const Login: FC = () => {
   async function facebookLogIn() {
@@ -38,7 +38,24 @@ export const Login: FC = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Connexion avec Facebook" onPress={facebookLogIn}></Button>
+      <Text h2 style={styles.title}>
+        Qure
+      </Text>
+      <Button
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        title="Connexion avec Facebook"
+        icon={
+          <Icon
+            name="facebook-box"
+            type="material-community"
+            color="white"
+            size={32}
+            containerStyle={styles.iconContainer}
+          />
+        }
+        onPress={facebookLogIn}
+      ></Button>
     </View>
   );
 };
@@ -49,5 +66,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    marginBottom: 50,
+  },
+  button: {
+    backgroundColor: '#4267B2',
+  },
+  buttonTitle: {
+    fontWeight: 'bold',
+  },
+  iconContainer: {
+    marginRight: 8,
   },
 });
