@@ -18,7 +18,11 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.qure.qureapp"
+    },
+    "android": {
+      "package": "com.qure.qureapp"
     }
   }
 }
