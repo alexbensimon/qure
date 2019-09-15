@@ -52,13 +52,19 @@ export class Community extends Component<{}, State> {
     const { challengesSucceed } = this.state;
     return (
       <View style={styles.container}>
-        <Text h3>
+        {/* <Text h3>
           Points :{' '}
           {challengesSucceed.reduce(
             (previousValue, currentValue) => previousValue + currentValue.level,
             0,
           )}
+        </Text> */}
+        <Text h3 style={styles.title}>
+          Classement des amis
         </Text>
+        <Text h4>1. Victoria Launay : 10</Text>
+        <Text h4>2. Pierre Lahmi : 7</Text>
+        <Text h4>3. Alexandre Bensimon : 4</Text>
       </View>
     );
   }
@@ -70,5 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    marginBottom: 30,
   },
 });
