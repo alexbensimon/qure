@@ -3,11 +3,8 @@ import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
 import { UserContext } from './UserContext';
-import { loadChallenges } from '../loadChallenges';
 
 export const Profile: FC = () => {
-  loadChallenges();
-
   const logOut = async () => {
     await firebase.auth().signOut();
   };
