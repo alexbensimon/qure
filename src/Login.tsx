@@ -17,7 +17,11 @@ export const Login: FC = () => {
         const response = await fetch(
           `https://graph.facebook.com/me?access_token=${token}`,
         );
-        console.log('TCL: facebookLogIn -> response', await response.json());
+        const { id } = await response.json();
+        const res2 = await fetch(
+          `https://graph.facebook.com/${id}/friends?access_token=${token}`,
+        );
+        console.log('TCL: facebookLogIn -> res2', await res2.json());
         await firebase
           .auth()
           .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
