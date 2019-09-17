@@ -14,13 +14,6 @@ export const Login: FC = () => {
         },
       );
       if (type === 'success') {
-        const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`,
-        );
-        const { id } = await response.json();
-        const res2 = await fetch(
-          `https://graph.facebook.com/${id}/friends?access_token=${token}`,
-        );
         await firebase
           .auth()
           .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
@@ -32,6 +25,50 @@ export const Login: FC = () => {
             // eslint-disable-next-line no-console
             console.log('Oups! Firebase signInWithCredential error: ', error);
           });
+        firebase.auth().onAuthStateChanged(async user => {
+          if (user) {
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(user.uid)
+              .set(
+                {
+                  name: user.displayName,
+                  photoUrl: user.photoURL,
+                  facebookId: user.providerData[0].uid,
+                },
+                { merge: true },
+              );
+            const { data: fbFriends } = await (await fetch(
+              `https://graph.facebook.com/${user.providerData[0].uid}/friends?access_token=${token}`,
+            )).json();
+            const promises = [];
+            fbFriends.forEach(friend => {
+              promises.push(
+                firebase
+                  .firestore()
+                  .collection('users')
+                  .where('facebookId', '==', friend.id)
+                  .limit(1)
+                  .get(),
+              );
+            });
+            const querySnapshots = await Promise.all(promises);
+            const friends = [];
+            querySnapshots.forEach(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                friends.push(doc);
+              });
+            });
+            friends.forEach(friend => {
+              firebase
+                .firestore()
+                .collection(`users/${user.uid}/friends`)
+                .doc(friend.id)
+                .set(friend.data());
+            });
+          }
+        });
       } else {
         // eslint-disable-next-line no-console
         console.log('Oups! Type not success, type: ', type);
