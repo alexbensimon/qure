@@ -5,7 +5,6 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
-import { UserContext } from '../UserContext';
 
 type Props = NavigationScreenProps;
 
@@ -14,8 +13,6 @@ type State = {
 };
 
 export class DiscoverChallenge extends Component<Props, State> {
-  static contextType = UserContext;
-
   state: State = {
     challengeTaken: null,
   };
@@ -26,7 +23,7 @@ export class DiscoverChallenge extends Component<Props, State> {
     const res = await fireSQL.query(`
       SELECT *
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}' AND challengeId = '${challenge.id}'
+      WHERE userId = '${firebase.auth().currentUser.uid}' AND challengeId = '${challenge.id}'
     `);
     this.setState({ challengeTaken: res.length > 0 });
   }
@@ -39,7 +36,7 @@ export class DiscoverChallenge extends Component<Props, State> {
       .collection('challengesTakenByUsers')
       .add({
         challengeId: challenge.id,
-        userId: this.context.uid,
+        userId: firebase.auth().currentUser.uid,
         timestamp: Date.now(),
         done: false,
       });

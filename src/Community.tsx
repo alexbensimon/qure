@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { UserContext } from './UserContext';
 import { FireSQL } from 'firesql';
 import firebase from 'firebase';
 import { Challenge } from './globalTypes';
@@ -11,8 +10,6 @@ type State = {
 };
 
 export class Community extends Component<{}, State> {
-  static contextType = UserContext;
-
   state: State = {
     challengesSucceed: [],
   };
@@ -27,7 +24,7 @@ export class Community extends Component<{}, State> {
       `
       SELECT challengeId
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}' AND done = true
+      WHERE userId = '${firebase.auth().currentUser.uid}' AND done = true
     `,
     );
     if (challengeIdsObjects.length > 0) {

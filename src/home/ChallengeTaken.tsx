@@ -13,7 +13,7 @@ import {
 import firebase from 'firebase';
 import React, { Component } from 'react';
 import { Button, Card, Text } from 'react-native-elements';
-import { Challenge, ChallengeTakenType } from './globalTypes';
+import { Challenge, ChallengeTakenType } from '../globalTypes';
 
 type Props = {
   challenge: Challenge;

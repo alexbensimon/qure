@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import { DiscoverChallenge } from './discover/DiscoverChallenge';
-import { DiscoverChallenges } from './discover/DiscoverChallenges';
-import { DiscoverTopics } from './discover/DiscoverTopics';
+import { DiscoverChallenge } from './DiscoverChallenge';
+import { DiscoverChallenges } from './DiscoverChallenges';
+import { DiscoverTopics } from './DiscoverTopics';
 
 export const DiscoverStack = createStackNavigator(
   {

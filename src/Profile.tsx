@@ -2,7 +2,6 @@ import firebase from 'firebase';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
-import { UserContext } from './UserContext';
 
 export const Profile: FC = () => {
   const logOut = async () => {
@@ -11,23 +10,21 @@ export const Profile: FC = () => {
 
   return (
     <View style={styles.container}>
-      <UserContext.Consumer>
-        {user => (
-          <>
-            <Avatar
-              rounded
-              source={{
-                uri: user.photoURL,
-              }}
-              size="medium"
-              containerStyle={styles.item}
-            />
-            <Text h4 style={styles.item}>
-              {user.displayName}
-            </Text>
-          </>
-        )}
-      </UserContext.Consumer>
+      {/* {user => (
+        <>
+          <Avatar
+            rounded
+            source={{
+              uri: user.photoURL,
+            }}
+            size="medium"
+            containerStyle={styles.item}
+          />
+          <Text h4 style={styles.item}>
+            {user.displayName}
+          </Text>
+        </>
+      )} */}
 
       <Button title="Déconnexion" onPress={logOut}></Button>
     </View>

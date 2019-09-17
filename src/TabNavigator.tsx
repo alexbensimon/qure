@@ -3,8 +3,8 @@ import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Community } from './Community';
-import { DiscoverStack } from './DiscoverStack';
-import { Home } from './Home';
+import { DiscoverStack } from './discover/DiscoverStack';
+import { Home } from './home/Home';
 import { Profile } from './Profile';
 
 const TabNavigator = createBottomTabNavigator(

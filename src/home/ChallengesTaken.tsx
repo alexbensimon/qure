@@ -4,8 +4,7 @@ import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ChallengeTaken } from './ChallengeTaken';
-import { Challenge, ChallengeTakenType } from './globalTypes';
-import { UserContext } from './UserContext';
+import { Challenge, ChallengeTakenType } from '../globalTypes';
 
 type State = {
   challenges: Array<Challenge>;
@@ -13,8 +12,6 @@ type State = {
 };
 
 export class ChallengesTaken extends Component<{}, State> {
-  static contextType = UserContext;
-
   state: State = {
     challenges: [],
     challengesTaken: [],
@@ -30,7 +27,8 @@ export class ChallengesTaken extends Component<{}, State> {
       `
       SELECT *
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}' AND done = false
+      WHERE userId = '${firebase.auth().currentUser.uid}' 
+        AND done = false
     `,
       { includeId: 'id' },
     )) as State['challengesTaken'];
@@ -58,7 +56,8 @@ export class ChallengesTaken extends Component<{}, State> {
       `
       SELECT *
       FROM challengesTakenByUsers
-      WHERE userId = '${this.context.uid}' AND challengeId = '${challengeId}'
+      WHERE userId = '${firebase.auth().currentUser.uid}' 
+        AND challengeId = '${challengeId}'
     `,
       { includeId: 'id' },
     );
