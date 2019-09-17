@@ -18,13 +18,15 @@ export class DiscoverChallenges extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const topic: Challenge['topic'] = this.props.navigation.getParam('topic');
+    const topic: Challenge['topics'][0] = this.props.navigation.getParam(
+      'topic',
+    );
     const fireSQL = new FireSQL(firebase.firestore());
     const challenges = (await fireSQL.query(
       `
       SELECT *
       FROM challenges
-      WHERE topic = '${topic}'
+      WHERE topics CONTAINS '${topic}'
     `,
       { includeId: 'id' },
     )) as Array<Challenge>;

@@ -7,7 +7,7 @@ import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 
 type State = {
-  topics: Array<Challenge['topic']>;
+  topics: Challenge['topics'];
 };
 
 type Props = NavigationScreenProps;
@@ -20,12 +20,17 @@ export class DiscoverTopics extends Component<Props, State> {
   async componentDidMount() {
     const fireSQL = new FireSQL(firebase.firestore());
     const challenges = (await fireSQL.query(`
-      SELECT topic
+      SELECT topics
       FROM challenges
     `)) as Array<Challenge>;
-    const topics = Array.from(
-      new Set(challenges.map(challenge => challenge.topic)),
+    const topicsDups = challenges.reduce(
+      (previousValue, currentValue) => [
+        ...previousValue,
+        ...currentValue.topics,
+      ],
+      [],
     );
+    const topics = Array.from(new Set(topicsDups));
     this.setState({ topics });
   }
 

@@ -6,7 +6,7 @@ export type User = {
 
 export type Challenge = {
   id: string;
-  topic: string;
+  topics: Array<string>;
   title: string;
   subTitle: string;
   description: string;
