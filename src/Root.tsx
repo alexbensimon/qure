@@ -19,6 +19,7 @@ export default class Root extends Component<{}, State> {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       this.setState({ user, loggedIn: Boolean(user) });
+      console.log('TCL: Root -> componentDidMount -> user', user);
     });
   }
 

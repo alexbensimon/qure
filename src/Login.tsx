@@ -10,11 +10,14 @@ export const Login: FC = () => {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
         '2808452099169831',
         {
-          behavior: 'native',
-          permissions: ['public_profile'],
+          permissions: ['public_profile', 'user_friends'],
         },
       );
       if (type === 'success') {
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`,
+        );
+        console.log('TCL: facebookLogIn -> response', await response.json());
         await firebase
           .auth()
           .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
