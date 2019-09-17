@@ -3,7 +3,7 @@
     "name": "Qure",
     "slug": "qure",
     "privacy": "unlisted",
-    "sdkVersion": "33.0.0",
+    "sdkVersion": "34.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,6 +23,9 @@
     },
     "android": {
       "package": "com.qure.qureapp"
-    }
+    },
+    "facebookScheme": "fb2808452099169831",
+    "facebookAppId": "2808452099169831",
+    "facebookDisplayName": "Qure"
   }
 }
