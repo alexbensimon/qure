@@ -38,6 +38,15 @@ export class ChallengeTaken extends Component<Props, State> {
       .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .doc(this.props.challengeTaken.id)
       .set({ succeed: true }, { merge: true });
+    firebase
+      .firestore()
+      .collection('/users')
+      .doc(firebase.auth().currentUser.uid)
+      .update({
+        points: firebase.firestore.FieldValue.increment(
+          this.props.challengeTaken.level,
+        ),
+      });
   };
 
   async componentDidMount() {

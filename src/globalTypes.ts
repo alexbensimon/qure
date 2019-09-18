@@ -2,6 +2,7 @@ export type User = {
   uid: string;
   displayName: string;
   photoURL: string;
+  points: number;
 };
 
 export type Challenge = {
