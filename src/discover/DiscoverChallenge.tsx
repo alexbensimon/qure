@@ -75,8 +75,8 @@ export class DiscoverChallenge extends Component<Props, State> {
         <Text h4 style={styles.text}>
           Règles :
         </Text>
-        {rules.map(rule => (
-          <Text h4 key={rule}>
+        {rules.map((rule, i) => (
+          <Text h4 key={i}>
             - {rule}
           </Text>
         ))}

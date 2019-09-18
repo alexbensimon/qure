@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -21,15 +20,16 @@ export class DiscoverChallenges extends Component<Props, State> {
     const topic: Challenge['topics'][0] = this.props.navigation.getParam(
       'topic',
     );
-    const fireSQL = new FireSQL(firebase.firestore());
-    const challenges = (await fireSQL.query(
-      `
-      SELECT *
-      FROM challenges
-      WHERE topics CONTAINS '${topic}'
-    `,
-      { includeId: 'id' },
-    )) as Array<Challenge>;
+    const querySnapshot = await firebase
+      .firestore()
+      .collection('challenges')
+      .where('topics', 'array-contains', topic)
+      .get();
+    const challenges = [];
+    querySnapshot.forEach(doc => {
+      challenges.push({ ...doc.data(), id: doc.id });
+    });
+
     this.setState({ challenges });
   }
 
@@ -41,7 +41,7 @@ export class DiscoverChallenges extends Component<Props, State> {
         {challenges.map(challenge => (
           <Button
             title={challenge.title}
-            key={challenge.title}
+            key={challenge.id}
             onPress={() => navigation.push('Challenge', { challenge })}
             buttonStyle={styles.challenge}
           ></Button>
