@@ -1,9 +1,12 @@
 export type User = {
-  uid: string;
-  displayName: string;
-  photoURL: string;
+  id: string;
+  name: string;
+  photoUrl: string;
+  facebookId: string;
   points: number;
 };
+
+export type Friend = User;
 
 export type Challenge = {
   id: string;
