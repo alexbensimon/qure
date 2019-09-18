@@ -1,35 +1,57 @@
 import firebase from 'firebase';
-import React, { FC } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
+import { User } from './globalTypes';
 
-export const Profile: FC = () => {
-  const logOut = async () => {
+type State = {
+  currentUser: User | null;
+};
+
+export class Profile extends Component<{}, State> {
+  state: State = {
+    currentUser: null,
+  };
+
+  async componentDidMount() {
+    const userQuerySnapshot = await firebase
+      .firestore()
+      .collection('/users')
+      .doc(firebase.auth().currentUser.uid)
+      .get();
+    if (userQuerySnapshot.exists) {
+      this.setState({ currentUser: userQuerySnapshot.data() as User });
+    }
+  }
+
+  logOut = async () => {
     await firebase.auth().signOut();
   };
 
-  return (
-    <View style={styles.container}>
-      {/* {user => (
+  render() {
+    const { currentUser } = this.state;
+    if (currentUser === null) return null;
+    return (
+      <View style={styles.container}>
         <>
           <Avatar
             rounded
             source={{
-              uri: user.photoURL,
+              uri: currentUser.photoUrl,
             }}
             size="medium"
             containerStyle={styles.item}
           />
           <Text h4 style={styles.item}>
-            {user.displayName}
+            {currentUser.name}
           </Text>
         </>
-      )} */}
 
-      <Button title="Déconnexion" onPress={logOut}></Button>
-    </View>
-  );
-};
+        <Button title="Déconnexion" onPress={this.logOut}></Button>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
