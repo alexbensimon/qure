@@ -31,13 +31,15 @@ export class ChallengeTaken extends Component<Props, State> {
     succeed: false,
   };
 
-  succeedChallenge = () => {
+  succeedChallenge = async () => {
     this.setState({ succeed: true });
+    // Update challenge
     firebase
       .firestore()
       .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .doc(this.props.challengeTaken.id)
       .set({ succeed: true }, { merge: true });
+    // Increase my points
     firebase
       .firestore()
       .collection('/users')
@@ -47,6 +49,22 @@ export class ChallengeTaken extends Component<Props, State> {
           this.props.challengeTaken.level,
         ),
       });
+    // Increase my points for my friends
+    const querySnapshot = await firebase
+      .firestore()
+      .collection(`/users/${firebase.auth().currentUser.uid}/friends`)
+      .get();
+    querySnapshot.forEach(doc => {
+      firebase
+        .firestore()
+        .collection(`/users/${doc.id}/friends`)
+        .doc(firebase.auth().currentUser.uid)
+        .update({
+          points: firebase.firestore.FieldValue.increment(
+            this.props.challengeTaken.level,
+          ),
+        });
+    });
   };
 
   async componentDidMount() {
