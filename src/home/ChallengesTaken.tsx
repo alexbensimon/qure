@@ -1,19 +1,16 @@
 import firebase from 'firebase';
-import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
+import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
-import { Challenge, ChallengeTakenType } from '../globalTypes';
 
 type State = {
-  challenges: Array<Challenge>;
   challengesTaken: Array<ChallengeTakenType>;
 };
 
 export class ChallengesTaken extends Component<{}, State> {
   state: State = {
-    challenges: [],
     challengesTaken: [],
   };
 
@@ -22,67 +19,37 @@ export class ChallengesTaken extends Component<{}, State> {
   }
 
   fetchData = async () => {
-    const fireSQL = new FireSQL(firebase.firestore());
-    const challengeIdsObjects = (await fireSQL.query(
-      `
-      SELECT *
-      FROM challengesTakenByUsers
-      WHERE userId = '${firebase.auth().currentUser.uid}' 
-        AND done = false
-    `,
-      { includeId: 'id' },
-    )) as State['challengesTaken'];
-    if (challengeIdsObjects.length > 0) {
-      const challengeIds = challengeIdsObjects
-        .map(obj => `'${obj.challengeId}'`)
-        .join(', ');
-      const challenges = (await fireSQL.query(
-        `
-        SELECT *
-        FROM challenges
-        WHERE __name__ IN ( ${challengeIds} )
-      `,
-        { includeId: 'id' },
-      )) as Array<Challenge>;
-      this.setState({ challenges, challengesTaken: challengeIdsObjects });
-    } else {
-      this.setState({ challenges: [] });
-    }
+    const querySnapshot = await firebase
+      .firestore()
+      .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
+      .where('succeed', '==', null)
+      .get();
+    const challengesTaken = [];
+    querySnapshot.forEach(doc => {
+      challengesTaken.push({ ...doc.data(), id: doc.id });
+    });
+    this.setState({ challengesTaken });
   };
 
-  removeChallenge = async (challengeId: string) => {
-    const fireSQL = new FireSQL(firebase.firestore());
-    const res = await fireSQL.query(
-      `
-      SELECT *
-      FROM challengesTakenByUsers
-      WHERE userId = '${firebase.auth().currentUser.uid}' 
-        AND challengeId = '${challengeId}'
-    `,
-      { includeId: 'id' },
-    );
-    const { id } = res[0];
+  failChallenge = async (id: string) => {
     await firebase
       .firestore()
-      .collection('challengesTakenByUsers')
+      .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .doc(id)
-      .delete();
+      .set({ succeed: false }, { merge: true });
     this.fetchData();
   };
 
   render() {
-    const { challenges, challengesTaken } = this.state;
+    const { challengesTaken } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView>
-          {challenges.map(challenge => (
+          {challengesTaken.map(challengeTaken => (
             <ChallengeTaken
-              key={challenge.id}
-              challenge={challenge}
-              challengeTaken={challengesTaken.find(
-                challengeTaken => challengeTaken.challengeId === challenge.id,
-              )}
-              removeChallenge={this.removeChallenge}
+              key={challengeTaken.id}
+              challengeTaken={challengeTaken}
+              failChallenge={() => this.failChallenge(challengeTaken.id)}
             />
           ))}
         </ScrollView>

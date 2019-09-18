@@ -19,5 +19,8 @@ export type ChallengeTakenType = {
   id: string;
   challengeId: Challenge['id'];
   timestamp: number;
-  done: boolean;
+  duration: Challenge['duration'];
+  level: Challenge['level'];
+  succeed: boolean | null;
+  title: Challenge['title'];
 };

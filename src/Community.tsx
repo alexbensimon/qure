@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FireSQL } from 'firesql';
-import firebase from 'firebase';
-import { Challenge } from './globalTypes';
 import { Text } from 'react-native-elements';
+import { Challenge } from './globalTypes';
 
 type State = {
   challengesSucceed: Array<Challenge>;
@@ -18,35 +16,9 @@ export class Community extends Component<{}, State> {
     this.fetchData();
   }
 
-  fetchData = async () => {
-    const fireSQL = new FireSQL(firebase.firestore());
-    const challengeIdsObjects = await fireSQL.query(
-      `
-      SELECT challengeId
-      FROM challengesTakenByUsers
-      WHERE userId = '${firebase.auth().currentUser.uid}' AND done = true
-    `,
-    );
-    if (challengeIdsObjects.length > 0) {
-      const challengeIds = challengeIdsObjects
-        .map(obj => `'${obj.challengeId}'`)
-        .join(', ');
-      const challengesSucceed = (await fireSQL.query(
-        `
-        SELECT *
-        FROM challenges
-        WHERE __name__ IN ( ${challengeIds} )
-      `,
-        { includeId: 'id' },
-      )) as Array<Challenge>;
-      this.setState({ challengesSucceed });
-    } else {
-      this.setState({ challengesSucceed: [] });
-    }
-  };
+  fetchData = async () => {};
 
   render() {
-    const { challengesSucceed } = this.state;
     return (
       <View style={styles.container}>
         {/* <Text h3>

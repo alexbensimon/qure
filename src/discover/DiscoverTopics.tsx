@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -18,19 +17,15 @@ export class DiscoverTopics extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const fireSQL = new FireSQL(firebase.firestore());
-    const challenges = (await fireSQL.query(`
-      SELECT topics
-      FROM challenges
-    `)) as Array<Challenge>;
-    const topicsDups = challenges.reduce(
-      (previousValue, currentValue) => [
-        ...previousValue,
-        ...currentValue.topics,
-      ],
-      [],
-    );
-    const topics = Array.from(new Set(topicsDups));
+    const topics = [];
+    const querySnapshot = await firebase
+      .firestore()
+      .collection('topics')
+      .get();
+    querySnapshot.forEach(doc => {
+      topics.push(doc.data().value);
+    });
+
     this.setState({ topics });
   }
 

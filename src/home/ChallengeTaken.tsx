@@ -4,46 +4,45 @@ import {
   differenceInHours,
   differenceInMinutes,
   differenceInSeconds,
+  isAfter,
   subDays,
   subHours,
   subMinutes,
   toDate,
-  isAfter,
 } from 'date-fns';
 import firebase from 'firebase';
 import React, { Component } from 'react';
 import { Button, Card, Text } from 'react-native-elements';
-import { Challenge, ChallengeTakenType } from '../globalTypes';
+import { ChallengeTakenType } from '../globalTypes';
 
 type Props = {
-  challenge: Challenge;
   challengeTaken: ChallengeTakenType;
-  removeChallenge: (challengeId: string) => void;
+  failChallenge: () => void;
 };
 
 type State = {
   timeRemaining: string;
-  done: boolean;
+  succeed: boolean;
 };
 
 export class ChallengeTaken extends Component<Props, State> {
   state: State = {
     timeRemaining: '',
-    done: false,
+    succeed: false,
   };
 
   succeedChallenge = () => {
-    this.setState({ done: true });
+    this.setState({ succeed: true });
     firebase
       .firestore()
-      .collection('challengesTakenByUsers')
+      .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .doc(this.props.challengeTaken.id)
-      .set({ done: true }, { merge: true });
+      .set({ succeed: true }, { merge: true });
   };
 
   async componentDidMount() {
     const startDate = toDate(this.props.challengeTaken.timestamp);
-    const endDate = addDays(startDate, this.props.challenge.duration);
+    const endDate = addDays(startDate, this.props.challengeTaken.duration);
     const interval = setInterval(() => {
       const now = toDate(Date.now());
 
@@ -77,19 +76,16 @@ export class ChallengeTaken extends Component<Props, State> {
   }
 
   render() {
-    const { challenge, removeChallenge } = this.props;
-    const { timeRemaining, done } = this.state;
+    const { challengeTaken, failChallenge } = this.props;
+    const { timeRemaining, succeed: done } = this.state;
     return (
-      <Card title={challenge.title}>
+      <Card title={challengeTaken.title}>
         {done ? (
           <Text>✅</Text>
         ) : (
           <>
             <Text>{timeRemaining}</Text>
-            <Button
-              title="❌ Fail"
-              onPress={() => removeChallenge(challenge.id)}
-            ></Button>
+            <Button title="❌ Fail" onPress={failChallenge}></Button>
           </>
         )}
       </Card>

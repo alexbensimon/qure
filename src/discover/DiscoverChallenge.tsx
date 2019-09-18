@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { FireSQL } from 'firesql';
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
@@ -18,14 +17,22 @@ export class DiscoverChallenge extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const challenge: Challenge = this.props.navigation.getParam('challenge');
-    const fireSQL = new FireSQL(firebase.firestore());
-    const res = await fireSQL.query(`
-      SELECT *
-      FROM challengesTakenByUsers
-      WHERE userId = '${firebase.auth().currentUser.uid}' AND challengeId = '${challenge.id}'
-    `);
-    this.setState({ challengeTaken: res.length > 0 });
+    const querySnapshot = await firebase
+      .firestore()
+      .collection(`users/${firebase.auth().currentUser.uid}/challengesTaken`)
+      .where(
+        'challengeId',
+        '==',
+        this.props.navigation.getParam('challenge').id,
+      )
+      .where('succeed', '==', null)
+      .limit(1)
+      .get();
+    const sameChallengeTaken = [];
+    querySnapshot.forEach(doc => {
+      sameChallengeTaken.push(doc.id);
+    });
+    this.setState({ challengeTaken: sameChallengeTaken.length > 0 });
   }
 
   takeChallenge = () => {
@@ -33,12 +40,14 @@ export class DiscoverChallenge extends Component<Props, State> {
     this.setState({ challengeTaken: true });
     firebase
       .firestore()
-      .collection('challengesTakenByUsers')
+      .collection(`users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .add({
         challengeId: challenge.id,
-        userId: firebase.auth().currentUser.uid,
         timestamp: Date.now(),
-        done: false,
+        succeed: null,
+        level: challenge.level,
+        title: challenge.title,
+        duration: challenge.duration,
       });
   };
 
