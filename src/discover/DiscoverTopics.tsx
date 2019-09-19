@@ -1,9 +1,10 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
+import { DiscoverCoachContainer } from './DiscoverCoachContainer';
 
 type State = {
   topics: Challenge['topics'];
@@ -33,21 +34,29 @@ export class DiscoverTopics extends Component<Props, State> {
     const { navigation } = this.props;
     const { topics } = this.state;
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        {topics.map(topic => (
-          <Button
-            title={topic}
-            key={topic}
-            onPress={() => navigation.push('Challenges', { topic })}
-            buttonStyle={styles.topic}
-          ></Button>
-        ))}
-      </ScrollView>
+      <>
+        <View style={styles.containerHeight}>
+          <ScrollView contentContainerStyle={styles.container}>
+            {topics.map(topic => (
+              <Button
+                title={topic}
+                key={topic}
+                onPress={() => navigation.push('Challenges', { topic })}
+                buttonStyle={styles.topic}
+              ></Button>
+            ))}
+          </ScrollView>
+        </View>
+        <DiscoverCoachContainer />
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  containerHeight: {
+    flex: 1,
+  },
   container: {
     alignItems: 'stretch',
   },

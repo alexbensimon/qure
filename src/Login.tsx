@@ -36,6 +36,8 @@ export const Login: FC = () => {
                   name: user.displayName,
                   photoUrl: user.photoURL,
                   facebookId: user.providerData[0].uid,
+                  // FIXME: verify if user already exists and do not override existing data
+                  coach: 'basic',
                 },
                 { merge: true },
               );
