@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text, Overlay } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
+import { Coach } from '../Coach';
 
 type Props = NavigationScreenProps;
 
@@ -81,49 +82,57 @@ export class DiscoverChallenge extends Component<Props, State> {
     }: Challenge = navigation.getParam('challenge');
     const { challengeTaken, showWarning } = this.state;
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text h1 style={styles.text}>
-          {title}
-        </Text>
-        <Text h2 style={styles.text}>
-          {subTitle}
-        </Text>
-        <Text h3 style={styles.text}>
-          Pourquoi ? {description}
-        </Text>
-        <Text h4 style={styles.text}>
-          Règles :
-        </Text>
-        {rules.map((rule, i) => (
-          <Text h4 key={i}>
-            - {rule}
-          </Text>
-        ))}
-        <Text h4 style={styles.text}>
-          Durée : {duration} jours
-        </Text>
-        <View style={styles.challengeTakenContainer}>
-          {challengeTaken === false && (
-            <Button title="💪" onPress={this.tryTakeChallenge}></Button>
-          )}
-          {challengeTaken === true && <Text>✅</Text>}
+      <>
+        <View style={styles.viewContainer}>
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <Text h1 style={styles.text}>
+              {title}
+            </Text>
+            <Text h2 style={styles.text}>
+              {subTitle}
+            </Text>
+            <Text h3 style={styles.text}>
+              Pourquoi ? {description}
+            </Text>
+            <Text h4 style={styles.text}>
+              Règles :
+            </Text>
+            {rules.map((rule, i) => (
+              <Text h4 key={i}>
+                - {rule}
+              </Text>
+            ))}
+            <Text h4 style={styles.text}>
+              Durée : {duration} jours
+            </Text>
+            <View style={styles.challengeTakenContainer}>
+              {challengeTaken === false && (
+                <Button title="💪" onPress={this.tryTakeChallenge}></Button>
+              )}
+              {challengeTaken === true && <Text>✅</Text>}
+            </View>
+            <Overlay
+              isVisible={showWarning}
+              onBackdropPress={() => this.setState({ showWarning: false })}
+            >
+              <View style={styles.overlay}>
+                <Text h4>🙅‍</Text>
+                <Text h4>Pas plus de 3 challenges en même temps</Text>
+              </View>
+            </Overlay>
+          </ScrollView>
         </View>
-        <Overlay
-          isVisible={showWarning}
-          onBackdropPress={() => this.setState({ showWarning: false })}
-        >
-          <View style={styles.overlay}>
-            <Text h4>🙅‍</Text>
-            <Text h4>Pas plus de 3 challenges en même temps</Text>
-          </View>
-        </Overlay>
-      </ScrollView>
+        <Coach sentences={[`J'adore le challenge ${title}`]} />
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  viewContainer: {
+    flex: 1,
+  },
+  scrollViewContainer: {
     marginRight: 20,
     marginLeft: 20,
   },

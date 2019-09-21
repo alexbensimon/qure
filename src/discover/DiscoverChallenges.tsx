@@ -1,9 +1,10 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
+import { Coach } from '../Coach';
 
 type Props = NavigationScreenProps;
 
@@ -37,22 +38,32 @@ export class DiscoverChallenges extends Component<Props, State> {
     const { navigation } = this.props;
     const { challenges } = this.state;
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        {challenges.map(challenge => (
-          <Button
-            title={challenge.title}
-            key={challenge.id}
-            onPress={() => navigation.push('Challenge', { challenge })}
-            buttonStyle={styles.challenge}
-          ></Button>
-        ))}
-      </ScrollView>
+      <>
+        <View style={styles.viewContainer}>
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            {challenges.map(challenge => (
+              <Button
+                title={challenge.title}
+                key={challenge.id}
+                onPress={() => navigation.push('Challenge', { challenge })}
+                buttonStyle={styles.challenge}
+              ></Button>
+            ))}
+          </ScrollView>
+        </View>
+        <Coach
+          sentences={[`J'adore les challenge ${navigation.getParam('topic')}`]}
+        />
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  viewContainer: {
+    flex: 1,
+  },
+  scrollViewContainer: {
     alignItems: 'stretch',
   },
   challenge: {
