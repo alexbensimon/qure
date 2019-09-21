@@ -26,6 +26,7 @@
     },
     "facebookScheme": "fb2808452099169831",
     "facebookAppId": "2808452099169831",
-    "facebookDisplayName": "Qure"
+    "facebookDisplayName": "Qure",
+    "scheme": "com.qure.qureapp"
   }
 }
