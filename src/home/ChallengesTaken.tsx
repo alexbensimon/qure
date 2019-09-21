@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
@@ -43,24 +43,26 @@ export class ChallengesTaken extends Component<{}, State> {
   render() {
     const { challengesTaken } = this.state;
     return (
-      <View style={styles.container}>
-        <ScrollView>
-          {challengesTaken.map(challengeTaken => (
-            <ChallengeTaken
-              key={challengeTaken.id}
-              challengeTaken={challengeTaken}
-              failChallenge={() => this.failChallenge(challengeTaken.id)}
-            />
-          ))}
-        </ScrollView>
-        <Button title="🙏" onPress={this.fetchData}></Button>
-      </View>
+      <>
+        {challengesTaken.map(challengeTaken => (
+          <ChallengeTaken
+            key={challengeTaken.id}
+            challengeTaken={challengeTaken}
+            failChallenge={() => this.failChallenge(challengeTaken.id)}
+          />
+        ))}
+        <Button
+          containerStyle={styles.refreshButton}
+          title="🙏"
+          onPress={this.fetchData}
+        ></Button>
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
+  refreshButton: {
+    marginTop: 20,
   },
 });

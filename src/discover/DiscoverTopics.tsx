@@ -35,8 +35,8 @@ export class DiscoverTopics extends Component<Props, State> {
     const { topics } = this.state;
     return (
       <>
-        <View style={styles.containerHeight}>
-          <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.viewContainer}>
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
             {topics.map(topic => (
               <Button
                 title={topic}
@@ -54,10 +54,10 @@ export class DiscoverTopics extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  containerHeight: {
+  viewContainer: {
     flex: 1,
   },
-  container: {
+  scrollViewContainer: {
     alignItems: 'stretch',
   },
   topic: {
