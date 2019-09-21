@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Community } from './community/Community';
 import { DiscoverStack } from './discover/DiscoverStack';
 import { Home } from './home/Home';
-import { Profile } from './Profile';
+import { Profile } from './profile/Profile';
 
 const TabNavigator = createBottomTabNavigator(
   {
