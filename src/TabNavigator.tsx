@@ -2,7 +2,7 @@ import { AntDesign } from '@expo/vector-icons/';
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { Community } from './Community';
+import { Community } from './community/Community';
 import { DiscoverStack } from './discover/DiscoverStack';
 import { Home } from './home/Home';
 import { Profile } from './Profile';
