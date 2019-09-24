@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4267B2',
   },
   buttonTitle: {
-    fontWeight: 'bold',
+    fontFamily: 'concert-one-regular',
   },
   iconContainer: {
     marginRight: 8,
