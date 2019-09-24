@@ -1,7 +1,8 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
+import { colors } from '../colors';
 import { User } from '../globalTypes';
 import { ProfileCoachContainer } from './ProfileCoachContainer';
 
@@ -35,20 +36,23 @@ export class Profile extends Component<{}, State> {
     return (
       <>
         <View style={styles.viewContainer}>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Avatar
-              rounded
-              source={{
-                uri: currentUser.photoUrl,
-              }}
-              size="medium"
-              containerStyle={styles.item}
-            />
-            <Text h4 style={styles.item}>
-              {currentUser.name}
-            </Text>
-            <Button title="Déconnexion" onPress={this.logOut}></Button>
-          </ScrollView>
+          <Avatar
+            rounded
+            source={{
+              uri: currentUser.photoUrl,
+            }}
+            size="medium"
+            containerStyle={styles.item}
+          />
+          <Text h4 style={{ ...styles.item, ...styles.name }}>
+            {currentUser.name}
+          </Text>
+          <Button
+            title="Déconnexion"
+            onPress={this.logOut}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonText}
+          ></Button>
         </View>
         <ProfileCoachContainer />
       </>
@@ -59,14 +63,22 @@ export class Profile extends Component<{}, State> {
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
-    marginTop: 40,
-  },
-  scrollViewContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
   item: {
     marginBottom: 30,
+  },
+  name: {
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
+  },
+  button: {
+    backgroundColor: colors.dark,
+  },
+  buttonText: {
+    color: colors.primary,
+    fontFamily: 'concert-one-regular',
   },
 });
