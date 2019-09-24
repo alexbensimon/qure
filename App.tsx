@@ -3,14 +3,24 @@ import React, { Component } from 'react';
 import './firebase.config.js';
 import Root from './src/Root';
 
-export default class App extends Component {
-  componentDidMount() {
-    Font.loadAsync({
+type State = {
+  fontLoaded: boolean;
+};
+
+export default class App extends Component<{}, State> {
+  state: State = {
+    fontLoaded: false,
+  };
+
+  async componentDidMount() {
+    await Font.loadAsync({
       'concert-one-regular': require('./assets/fonts/ConcertOne-Regular.ttf'),
     });
+    this.setState({ fontLoaded: true });
   }
 
   render() {
-    return <Root />;
+    const { fontLoaded } = this.state;
+    return fontLoaded && <Root />;
   }
 }
