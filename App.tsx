@@ -1,7 +1,16 @@
-import React, { FC } from 'react';
+import * as Font from 'expo-font';
+import React, { Component } from 'react';
 import './firebase.config.js';
 import Root from './src/Root';
 
-const App: FC = () => <Root />;
+export default class App extends Component {
+  componentDidMount() {
+    Font.loadAsync({
+      'concert-one-regular': require('./assets/fonts/ConcertOne-Regular.ttf'),
+    });
+  }
 
-export default App;
+  render() {
+    return <Root />;
+  }
+}
