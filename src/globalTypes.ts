@@ -27,4 +27,5 @@ export type ChallengeTakenType = {
   level: Challenge['level'];
   succeed: boolean | null;
   title: Challenge['title'];
+  subTitle: Challenge['subTitle'];
 };

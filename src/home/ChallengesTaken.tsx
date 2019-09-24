@@ -49,6 +49,7 @@ export class ChallengesTaken extends Component<{}, State> {
             key={challengeTaken.id}
             challengeTaken={challengeTaken}
             failChallenge={() => this.failChallenge(challengeTaken.id)}
+            reload={this.fetchData}
           />
         ))}
         <Button

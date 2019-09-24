@@ -72,8 +72,7 @@ const styles = StyleSheet.create({
   challengeButton: {
     marginTop: 40,
     height: 100,
-    marginRight: 10,
-    marginLeft: 10,
+    marginHorizontal: 10,
     backgroundColor: colors.dark,
   },
   challengeTitle: {

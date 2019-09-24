@@ -68,6 +68,7 @@ export class DiscoverChallenge extends Component<Props, State> {
         level: challenge.level,
         title: challenge.title,
         duration: challenge.duration,
+        subTitle: challenge.subTitle,
       });
   };
 

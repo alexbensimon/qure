@@ -12,12 +12,15 @@ import {
 } from 'date-fns';
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { Button, Card, Text } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 
 type Props = {
   challengeTaken: ChallengeTakenType;
   failChallenge: () => void;
+  reload: () => void;
 };
 
 type State = {
@@ -92,30 +95,81 @@ export class ChallengeTaken extends Component<Props, State> {
         now,
       );
       this.setState({
-        timeRemaining: `Temps restant : 
-          ${daysRemaining} jours 
-          ${hoursRemaining} heures 
-          ${minutesRemaining} minutes
-          ${secondsRemaining} secondes
-        `,
+        timeRemaining: `${daysRemaining}:${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`,
       });
     }, 1000);
   }
 
   render() {
-    const { challengeTaken, failChallenge } = this.props;
-    const { timeRemaining, succeed: done } = this.state;
+    const { challengeTaken, failChallenge, reload } = this.props;
+    const { timeRemaining, succeed } = this.state;
     return (
-      <Card title={challengeTaken.title}>
-        {done ? (
-          <Text>✅</Text>
+      <View style={styles.card}>
+        {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
+        <Text h4 style={styles.title}>
+          {challengeTaken.title}
+        </Text>
+        <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
+        {!succeed ? (
+          <Button
+            title="J'ai raté"
+            onPress={failChallenge}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            titleStyle={styles.failButtonTitle}
+          ></Button>
         ) : (
-          <>
-            <Text>{timeRemaining}</Text>
-            <Button title="❌ Fail" onPress={failChallenge}></Button>
-          </>
+          <Button
+            title="Bravo !"
+            onPress={reload}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            titleStyle={styles.succeedButtonTitle}
+          ></Button>
         )}
-      </Card>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  card: {
+    marginHorizontal: 10,
+    marginBottom: 30,
+    backgroundColor: colors.dark,
+    borderRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 3,
+  },
+  title: {
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
+    marginBottom: 5,
+  },
+  subTitle: {
+    fontFamily: 'concert-one-regular',
+    color: colors.light,
+    marginBottom: 10,
+  },
+  time: {
+    fontFamily: 'concert-one-regular',
+    color: colors.alert,
+    alignSelf: 'flex-end',
+    marginRight: 5,
+  },
+  buttonContainer: {
+    alignSelf: 'stretch',
+  },
+  button: {
+    backgroundColor: colors.light,
+  },
+  failButtonTitle: {
+    color: colors.alert,
+    fontFamily: 'concert-one-regular',
+  },
+  succeedButtonTitle: {
+    color: colors.primary,
+    fontFamily: 'concert-one-regular',
+  },
+});

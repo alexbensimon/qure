@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
+import { colors } from '../colors';
 import { ChallengesTaken } from './ChallengesTaken';
 import { HomeCoachContainer } from './HomeCoachContainer';
 
@@ -7,6 +9,9 @@ export const Home: FC = () => (
   <>
     <View style={styles.viewContainer}>
       <ScrollView>
+        <Text h1 style={styles.title}>
+          Défis en cours
+        </Text>
         <ChallengesTaken />
       </ScrollView>
     </View>
@@ -17,6 +22,13 @@ export const Home: FC = () => (
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
-    marginTop: 40,
+    paddingTop: 40,
+    backgroundColor: colors.white,
+  },
+  title: {
+    marginBottom: 30,
+    textAlign: 'center',
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
   },
 });
