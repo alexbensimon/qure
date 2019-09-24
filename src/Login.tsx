@@ -3,6 +3,7 @@ import firebase from 'firebase';
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from 'react-native-elements';
+import { colors } from './colors';
 
 export const Login: FC = () => {
   async function facebookLogIn() {
@@ -82,48 +83,54 @@ export const Login: FC = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text h2 style={styles.title}>
-        Qure
-      </Text>
-      <Button
-        buttonStyle={styles.button}
-        titleStyle={styles.buttonTitle}
-        containerStyle={styles.buttonContainer}
-        title="Connexion avec Facebook"
-        icon={
-          <Icon
-            name="facebook-box"
-            type="material-community"
-            color="white"
-            size={32}
-            containerStyle={styles.iconContainer}
-          />
-        }
-        onPress={facebookLogIn}
-      ></Button>
-    </View>
+    <>
+      <View style={styles.containerTop}>
+        <Text style={styles.title}>Qure</Text>
+      </View>
+      <View style={styles.containerBottom}>
+        <Button
+          buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
+          title="Connexion avec Facebook"
+          icon={
+            <Icon
+              name="facebook-box"
+              type="material-community"
+              color="white"
+              size={32}
+              containerStyle={styles.iconContainer}
+            />
+          }
+          onPress={facebookLogIn}
+        ></Button>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  containerTop: {
+    flex: 0.5,
+    backgroundColor: colors.dark,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerBottom: {
+    flex: 0.5,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    marginBottom: 50,
+    fontFamily: 'concert-one-regular',
+    fontSize: 100,
+    color: colors.primary,
   },
   button: {
     backgroundColor: '#4267B2',
   },
   buttonTitle: {
     fontWeight: 'bold',
-  },
-  buttonContainer: {
-    marginBottom: 100,
   },
   iconContainer: {
     marginRight: 8,
