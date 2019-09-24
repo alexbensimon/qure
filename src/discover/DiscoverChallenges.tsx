@@ -5,6 +5,7 @@ import { Button } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { Coach } from '../Coach';
+import { colors } from '../colors';
 
 type Props = NavigationScreenProps;
 
@@ -46,7 +47,8 @@ export class DiscoverChallenges extends Component<Props, State> {
                 title={challenge.title}
                 key={challenge.id}
                 onPress={() => navigation.push('Challenge', { challenge })}
-                buttonStyle={styles.challenge}
+                buttonStyle={styles.challengeButton}
+                titleStyle={styles.challengeTitle}
               ></Button>
             ))}
           </ScrollView>
@@ -62,14 +64,20 @@ export class DiscoverChallenges extends Component<Props, State> {
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
+    backgroundColor: colors.white,
   },
   scrollViewContainer: {
     alignItems: 'stretch',
   },
-  challenge: {
+  challengeButton: {
     marginTop: 40,
     height: 100,
     marginRight: 10,
     marginLeft: 10,
+    backgroundColor: colors.dark,
+  },
+  challengeTitle: {
+    color: colors.primary,
+    fontFamily: 'concert-one-regular',
   },
 });

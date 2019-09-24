@@ -5,6 +5,7 @@ import { Button } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { DiscoverCoachContainer } from './DiscoverCoachContainer';
+import { colors } from '../colors';
 
 type State = {
   topics: Challenge['topics'];
@@ -42,7 +43,8 @@ export class DiscoverTopics extends Component<Props, State> {
                 title={topic}
                 key={topic}
                 onPress={() => navigation.push('Challenges', { topic })}
-                buttonStyle={styles.topic}
+                buttonStyle={styles.topicButton}
+                titleStyle={styles.topicTitle}
               ></Button>
             ))}
           </ScrollView>
@@ -56,14 +58,20 @@ export class DiscoverTopics extends Component<Props, State> {
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
+    backgroundColor: colors.white,
   },
   scrollViewContainer: {
     alignItems: 'stretch',
   },
-  topic: {
+  topicButton: {
     marginTop: 40,
     height: 100,
     marginRight: 10,
     marginLeft: 10,
+    backgroundColor: colors.light,
+  },
+  topicTitle: {
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
   },
 });
