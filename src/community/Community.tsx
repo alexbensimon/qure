@@ -4,6 +4,7 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text, Avatar } from 'react-native-elements';
 import { Friend, User } from '../globalTypes';
 import { CommunityCoachContainer } from './CommunityCoachContainer';
+import { colors } from '../colors';
 
 type State = {
   currentUser: User;
@@ -47,20 +48,29 @@ export class Community extends Component<{}, State> {
 
   render() {
     const { currentUser, friends } = this.state;
-    const people = [...friends, { ...currentUser, isCurrentUser: true }];
+    const people: Array<(Friend | User) & { isCurrentUser?: boolean }> = [
+      ...friends,
+      { ...currentUser, isCurrentUser: true },
+    ];
     const peopleSorted = people.sort((a, b) => b.points || 0 - a.points || 0);
     if (currentUser === null && friends.length === 0) return null;
     return (
       <>
         <View style={styles.viewContainer}>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Text h3 style={styles.title}>
+            <Text h1 style={styles.title}>
               Classement
             </Text>
             {peopleSorted.map((person, i) => (
               <View style={styles.line} key={person.id}>
                 <View style={styles.nameContainer}>
-                  <Text h4 style={styles.item}>
+                  <Text
+                    h4
+                    style={{
+                      ...styles.item,
+                      ...(person.isCurrentUser ? styles.textSelf : styles.text),
+                    }}
+                  >
                     {i + 1}.
                   </Text>
                   <Avatar
@@ -70,9 +80,19 @@ export class Community extends Component<{}, State> {
                     }}
                     containerStyle={styles.item}
                   />
-                  <Text h4>{person.name}</Text>
+                  <Text
+                    h4
+                    style={person.isCurrentUser ? styles.textSelf : styles.text}
+                  >
+                    {person.name}
+                  </Text>
                 </View>
-                <Text h4>{person.points || 0}</Text>
+                <Text
+                  h4
+                  style={person.isCurrentUser ? styles.textSelf : styles.text}
+                >
+                  {person.points || 0}
+                </Text>
               </View>
             ))}
           </ScrollView>
@@ -86,14 +106,17 @@ export class Community extends Component<{}, State> {
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
+    backgroundColor: colors.white,
   },
   scrollViewContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginTop: 50,
   },
   title: {
     marginBottom: 30,
     textAlign: 'center',
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
   },
   line: {
     flexDirection: 'row',
@@ -107,5 +130,13 @@ const styles = StyleSheet.create({
   },
   item: {
     marginRight: 10,
+  },
+  text: {
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
+  },
+  textSelf: {
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
   },
 });
