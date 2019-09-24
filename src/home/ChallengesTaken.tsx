@@ -1,16 +1,19 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
+import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
+import { Text } from 'react-native-elements';
+import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
 
 type State = {
   challengesTaken: Array<ChallengeTakenType>;
+  refreshing: boolean;
 };
 
 export class ChallengesTaken extends Component<{}, State> {
   state: State = {
+    refreshing: false,
     challengesTaken: [],
   };
 
@@ -31,6 +34,12 @@ export class ChallengesTaken extends Component<{}, State> {
     this.setState({ challengesTaken });
   };
 
+  handleRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.fetchData();
+    this.setState({ refreshing: false });
+  };
+
   failChallenge = async (id: string) => {
     await firebase
       .firestore()
@@ -41,9 +50,19 @@ export class ChallengesTaken extends Component<{}, State> {
   };
 
   render() {
-    const { challengesTaken } = this.state;
+    const { challengesTaken, refreshing } = this.state;
     return (
-      <>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={this.handleRefresh}
+          />
+        }
+      >
+        <Text h1 style={styles.title}>
+          Défis en cours
+        </Text>
         {challengesTaken.map(challengeTaken => (
           <ChallengeTaken
             key={challengeTaken.id}
@@ -52,18 +71,16 @@ export class ChallengesTaken extends Component<{}, State> {
             reload={this.fetchData}
           />
         ))}
-        <Button
-          containerStyle={styles.refreshButton}
-          title="🙏"
-          onPress={this.fetchData}
-        ></Button>
-      </>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  refreshButton: {
-    marginTop: 20,
+  title: {
+    marginBottom: 30,
+    textAlign: 'center',
+    color: colors.dark,
+    fontFamily: 'concert-one-regular',
   },
 });
