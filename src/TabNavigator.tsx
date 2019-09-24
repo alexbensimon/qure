@@ -6,6 +6,7 @@ import { Community } from './community/Community';
 import { DiscoverStack } from './discover/DiscoverStack';
 import { Home } from './home/Home';
 import { Profile } from './profile/Profile';
+import { colors } from './colors';
 
 const TabNavigator = createBottomTabNavigator(
   {
@@ -15,6 +16,17 @@ const TabNavigator = createBottomTabNavigator(
     Profil: Profile,
   },
   {
+    // @ts-ignore
+    tabBarOptions: {
+      activeTintColor: colors.primary,
+      inactiveTintColor: colors.light,
+      style: {
+        backgroundColor: colors.white,
+      },
+      labelStyle: {
+        fontFamily: 'concert-one-regular',
+      },
+    },
     // @ts-ignore
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ tintColor }: { tintColor: string }) => {
