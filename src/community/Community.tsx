@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, RefreshControl } from 'react-native';
 import { Text, Avatar } from 'react-native-elements';
 import { Friend, User } from '../globalTypes';
 import { CommunityCoachContainer } from './CommunityCoachContainer';
@@ -9,12 +9,14 @@ import { colors } from '../colors';
 type State = {
   currentUser: User;
   friends: Array<Friend>;
+  refreshing: boolean;
 };
 
 export class Community extends Component<{}, State> {
   state: State = {
     currentUser: null,
     friends: [],
+    refreshing: false,
   };
 
   async componentDidMount() {
@@ -46,8 +48,14 @@ export class Community extends Component<{}, State> {
     this.setState({ currentUser, friends });
   };
 
+  handleRefresh = async () => {
+    this.setState({ refreshing: true });
+    await this.fetchData();
+    this.setState({ refreshing: false });
+  };
+
   render() {
-    const { currentUser, friends } = this.state;
+    const { currentUser, friends, refreshing } = this.state;
     const people: Array<(Friend | User) & { isCurrentUser?: boolean }> = [
       ...friends,
       { ...currentUser, isCurrentUser: true },
@@ -57,7 +65,15 @@ export class Community extends Component<{}, State> {
     return (
       <>
         <View style={styles.viewContainer}>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={this.handleRefresh}
+              />
+            }
+          >
             <Text h1 style={styles.title}>
               Classement
             </Text>
@@ -107,10 +123,10 @@ const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
     backgroundColor: colors.white,
+    paddingTop: 40,
   },
   scrollViewContainer: {
     backgroundColor: colors.white,
-    marginTop: 50,
   },
   title: {
     marginBottom: 30,
