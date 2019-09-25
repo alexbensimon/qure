@@ -182,8 +182,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: colors.alert,
   },
-  title: {},
-  subTitle: {},
   description: {
     ...commonStyles.item,
     textAlign: 'left',
