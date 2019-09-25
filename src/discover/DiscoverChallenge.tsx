@@ -5,6 +5,7 @@ import { Button, Text, Overlay } from 'react-native-elements';
 import { NavigationScreenProps, ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { Coach } from '../Coach';
+import { colors } from '../colors';
 
 type Props = NavigationScreenProps;
 
@@ -85,32 +86,58 @@ export class DiscoverChallenge extends Component<Props, State> {
     return (
       <>
         <View style={styles.viewContainer}>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Text h1 style={styles.text}>
-              {title}
-            </Text>
-            <Text h2 style={styles.text}>
-              {subTitle}
-            </Text>
-            <Text h3 style={styles.text}>
-              Pourquoi ? {description}
-            </Text>
-            <Text h4 style={styles.text}>
-              Règles :
-            </Text>
-            {rules.map((rule, i) => (
-              <Text h4 key={i}>
-                - {rule}
+          <ScrollView>
+            <View style={styles.card}>
+              <Text h4 style={styles.indicator}>
+                Défi
               </Text>
-            ))}
-            <Text h4 style={styles.text}>
-              Durée : {duration} jours
-            </Text>
+              <Text h1 style={commonStyles.item}>
+                {title}
+              </Text>
+              <Text h4 style={styles.indicator}>
+                Objectif
+              </Text>
+              <Text h2 style={commonStyles.item}>
+                {subTitle}
+              </Text>
+              <Text h4 style={styles.indicator}>
+                Pourquoi ?
+              </Text>
+              <Text h4 style={styles.description}>
+                {description}
+              </Text>
+              <Text h4 style={styles.indicator}>
+                Règles
+              </Text>
+              {rules.map((rule, i) => (
+                <Text h4 key={i} style={styles.rule}>
+                  👉 {rule}
+                </Text>
+              ))}
+              <Text style={commonStyles.item}></Text>
+              <Text h4 style={styles.indicator}>
+                Durée
+              </Text>
+              <Text h2 style={commonStyles.item}>
+                {duration} jour{duration > 1 && 's'}
+              </Text>
+            </View>
             <View style={styles.challengeTakenContainer}>
               {challengeTaken === false && (
-                <Button title="💪" onPress={this.tryTakeChallenge}></Button>
+                <Button
+                  title="Je relève le défi !"
+                  onPress={this.tryTakeChallenge}
+                  buttonStyle={styles.button}
+                  titleStyle={styles.takeChallengeButtonTitle}
+                ></Button>
               )}
-              {challengeTaken === true && <Text>✅</Text>}
+              {challengeTaken === true && (
+                <Button
+                  title="Défi en cours..."
+                  buttonStyle={styles.button}
+                  titleStyle={styles.currentChallengeButtonTitle}
+                ></Button>
+              )}
             </View>
             <Overlay
               isVisible={showWarning}
@@ -129,20 +156,61 @@ export class DiscoverChallenge extends Component<Props, State> {
   }
 }
 
+const commonStyles = StyleSheet.create({
+  item: {
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
+
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
+    backgroundColor: colors.dark,
   },
-  scrollViewContainer: {
-    marginRight: 20,
-    marginLeft: 20,
+  card: {
+    backgroundColor: colors.dark,
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
-  text: {
-    marginTop: 30,
+  indicator: {
+    fontFamily: 'concert-one-regular',
+    alignSelf: 'flex-start',
+    color: colors.alert,
+  },
+  title: {},
+  subTitle: {},
+  description: {
+    ...commonStyles.item,
+    textAlign: 'left',
+    alignSelf: 'flex-start',
+    paddingLeft: 10,
+  },
+  rule: {
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
+    alignSelf: 'flex-start',
+    paddingLeft: 10,
   },
   challengeTakenContainer: {
-    marginTop: 30,
-    marginBottom: 30,
+    alignSelf: 'stretch',
+  },
+  button: {
+    backgroundColor: colors.light,
+  },
+  takeChallengeButtonTitle: {
+    color: colors.primary,
+    fontFamily: 'concert-one-regular',
+    fontSize: 40,
+  },
+  currentChallengeButtonTitle: {
+    fontFamily: 'concert-one-regular',
+    fontSize: 40,
+    color: colors.alert,
   },
   overlay: {
     flex: 1,
