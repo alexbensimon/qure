@@ -2,14 +2,18 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Overlay, Text } from 'react-native-elements';
-import { ScrollView } from 'react-navigation';
+import {
+  ScrollView,
+  withNavigation,
+  NavigationScreenProps,
+} from 'react-navigation';
 import { Coach } from './Coach';
 import { colors } from './colors';
 import { Challenge } from './globalTypes';
 
 type Props = {
   challengeId: Challenge['id'];
-};
+} & NavigationScreenProps;
 
 type State = {
   challenge: Challenge;
@@ -17,7 +21,7 @@ type State = {
   showWarning: boolean;
 };
 
-export class ChallengeDetails extends Component<Props, State> {
+class RawChallengeDetails extends Component<Props, State> {
   state: State = {
     challenge: null,
     challengeTaken: null,
@@ -99,6 +103,7 @@ export class ChallengeDetails extends Component<Props, State> {
   render() {
     if (!this.state.challenge) return null;
 
+    const { navigation } = this.props;
     const {
       challenge: { title, subTitle, description, rules, duration },
       challengeTaken,
@@ -155,6 +160,7 @@ export class ChallengeDetails extends Component<Props, State> {
               {challengeTaken === true && (
                 <Button
                   title="Défi en cours..."
+                  onPress={() => navigation.navigate('Home')}
                   buttonStyle={styles.button}
                   titleStyle={styles.currentChallengeButtonTitle}
                 ></Button>
@@ -176,6 +182,8 @@ export class ChallengeDetails extends Component<Props, State> {
     );
   }
 }
+
+export const ChallengeDetails = withNavigation(RawChallengeDetails);
 
 const commonStyles = StyleSheet.create({
   item: {
