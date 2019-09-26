@@ -97,7 +97,7 @@ export class ChallengeDetails extends Component<Props, State> {
   };
 
   render() {
-    if (this.state.challenge === null) return null;
+    if (!this.state.challenge) return null;
 
     const {
       challenge: { title, subTitle, description, rules, duration },

@@ -2,15 +2,15 @@ import { AntDesign } from '@expo/vector-icons/';
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { colors } from './colors';
 import { Community } from './community/Community';
 import { DiscoverStack } from './discover/DiscoverStack';
-import { Home } from './home/Home';
+import { HomeStack } from './home/HomeStack';
 import { Profile } from './profile/Profile';
-import { colors } from './colors';
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Home: Home,
+    Home: HomeStack,
     Découvrir: DiscoverStack,
     Communauté: Community,
     Profil: Profile,

@@ -12,8 +12,9 @@ import {
 } from 'date-fns';
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
+import { NavigationScreenProps, withNavigation } from 'react-navigation';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 
@@ -21,14 +22,14 @@ type Props = {
   challengeTaken: ChallengeTakenType;
   failChallenge: () => void;
   reload: () => void;
-};
+} & NavigationScreenProps;
 
 type State = {
   timeRemaining: string;
   succeed: boolean;
 };
 
-export class ChallengeTaken extends Component<Props, State> {
+class RawChallengeTaken extends Component<Props, State> {
   state: State = {
     timeRemaining: '',
     succeed: false,
@@ -101,36 +102,46 @@ export class ChallengeTaken extends Component<Props, State> {
   }
 
   render() {
-    const { challengeTaken, failChallenge, reload } = this.props;
+    const { challengeTaken, failChallenge, reload, navigation } = this.props;
     const { timeRemaining, succeed } = this.state;
     return (
-      <View style={styles.card}>
-        {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
-        <Text h4 style={styles.title}>
-          {challengeTaken.title}
-        </Text>
-        <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
-        {!succeed ? (
-          <Button
-            title="J'ai raté"
-            onPress={failChallenge}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={styles.button}
-            titleStyle={styles.failButtonTitle}
-          ></Button>
-        ) : (
-          <Button
-            title="Bravo !"
-            onPress={reload}
-            containerStyle={styles.buttonContainer}
-            buttonStyle={styles.button}
-            titleStyle={styles.succeedButtonTitle}
-          ></Button>
-        )}
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.push('Challenge', {
+            challengeId: challengeTaken.challengeId,
+          });
+        }}
+      >
+        <View style={styles.card}>
+          {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
+          <Text h4 style={styles.title}>
+            {challengeTaken.title}
+          </Text>
+          <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
+          {!succeed ? (
+            <Button
+              title="J'ai raté"
+              onPress={failChallenge}
+              containerStyle={styles.buttonContainer}
+              buttonStyle={styles.button}
+              titleStyle={styles.failButtonTitle}
+            ></Button>
+          ) : (
+            <Button
+              title="Bravo !"
+              onPress={reload}
+              containerStyle={styles.buttonContainer}
+              buttonStyle={styles.button}
+              titleStyle={styles.succeedButtonTitle}
+            ></Button>
+          )}
+        </View>
+      </TouchableOpacity>
     );
   }
 }
+
+export const ChallengeTaken = withNavigation(RawChallengeTaken);
 
 const styles = StyleSheet.create({
   card: {
