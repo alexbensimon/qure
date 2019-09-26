@@ -46,7 +46,9 @@ export class DiscoverChallenges extends Component<Props, State> {
               <Button
                 title={challenge.title}
                 key={challenge.id}
-                onPress={() => navigation.push('Challenge', { challenge })}
+                onPress={() =>
+                  navigation.push('Challenge', { challengeId: challenge.id })
+                }
                 buttonStyle={styles.challengeButton}
                 titleStyle={styles.challengeTitle}
               ></Button>
