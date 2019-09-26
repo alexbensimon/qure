@@ -169,10 +169,14 @@ class RawChallengeDetails extends Component<Props, State> {
             <Overlay
               isVisible={showWarning}
               onBackdropPress={() => this.setState({ showWarning: false })}
+              overlayStyle={styles.overlay}
             >
-              <View style={styles.overlay}>
-                <Text h4>🙅‍</Text>
-                <Text h4>Pas plus de 3 challenges en même temps</Text>
+              <View style={styles.overlayContent}>
+                <Text style={styles.overlayText}>🙅‍</Text>
+                <Text style={styles.overlayText}>
+                  Tu ne peux pas relever plus de 3 challenges en même temps.
+                  Fais nous confiance, tu auras de meilleurs résultats.
+                </Text>
               </View>
             </Overlay>
           </ScrollView>
@@ -239,8 +243,19 @@ const styles = StyleSheet.create({
     color: colors.alert,
   },
   overlay: {
+    flex: 0.5,
+    borderRadius: 10,
+    backgroundColor: colors.white,
+  },
+  overlayContent: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  overlayText: {
+    fontFamily: 'concert-one-regular',
+    color: colors.dark,
+    fontSize: 30,
+    textAlign: 'center',
   },
 });
