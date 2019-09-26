@@ -117,13 +117,13 @@ class RawChallengeDetails extends Component<Props, State> {
               <Text h4 style={styles.indicator}>
                 Défi
               </Text>
-              <Text h1 style={commonStyles.item}>
+              <Text h1 style={styles.item}>
                 {title}
               </Text>
               <Text h4 style={styles.indicator}>
                 Objectif
               </Text>
-              <Text h2 style={commonStyles.item}>
+              <Text h2 style={styles.item}>
                 {subTitle}
               </Text>
               <Text h4 style={styles.indicator}>
@@ -140,11 +140,11 @@ class RawChallengeDetails extends Component<Props, State> {
                   👉 {rule}
                 </Text>
               ))}
-              <Text style={commonStyles.item}></Text>
+              <Text style={styles.item}></Text>
               <Text h4 style={styles.indicator}>
                 Durée
               </Text>
-              <Text h2 style={commonStyles.item}>
+              <Text h2 style={styles.item}>
                 {duration} jour{duration > 1 && 's'}
               </Text>
             </View>
@@ -185,15 +185,6 @@ class RawChallengeDetails extends Component<Props, State> {
 
 export const ChallengeDetails = withNavigation(RawChallengeDetails);
 
-const commonStyles = StyleSheet.create({
-  item: {
-    fontFamily: 'concert-one-regular',
-    color: colors.primary,
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-});
-
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
@@ -211,8 +202,16 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     color: colors.alert,
   },
+  item: {
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
   description: {
-    ...commonStyles.item,
+    fontFamily: 'concert-one-regular',
+    color: colors.primary,
+    marginBottom: 15,
     textAlign: 'left',
     alignSelf: 'flex-start',
     paddingLeft: 10,
