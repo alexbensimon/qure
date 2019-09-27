@@ -60,7 +60,9 @@ export class Community extends Component<{}, State> {
       ...friends,
       { ...currentUser, isCurrentUser: true },
     ];
-    const peopleSorted = people.sort((a, b) => b.points || 0 - a.points || 0);
+    const peopleSorted = people.sort(
+      (a, b) => (b.points || 0) - (a.points || 0),
+    );
     if (currentUser === null && friends.length === 0) return null;
     return (
       <>
