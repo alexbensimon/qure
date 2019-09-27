@@ -81,7 +81,7 @@ class RawChallengeDetails extends Component<Props, State> {
   };
 
   takeChallenge = () => {
-    const { challengeId } = this.props;
+    const { challengeId, navigation } = this.props;
     const {
       challenge: { level, title, duration, subTitle },
     } = this.state;
@@ -98,6 +98,7 @@ class RawChallengeDetails extends Component<Props, State> {
         duration: duration,
         subTitle: subTitle,
       });
+    navigation.navigate('Home');
   };
 
   render() {
