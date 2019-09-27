@@ -35,6 +35,42 @@ class RawChallengeTaken extends Component<Props, State> {
     succeed: false,
   };
 
+  interval: NodeJS.Timeout = null;
+
+  async componentDidMount() {
+    const startDate = toDate(this.props.challengeTaken.timestamp);
+    const endDate = addDays(startDate, this.props.challengeTaken.duration);
+    this.interval = setInterval(() => {
+      const now = toDate(Date.now());
+
+      if (isAfter(now, endDate)) {
+        this.succeedChallenge();
+        clearInterval(this.interval);
+      }
+
+      const daysRemaining = differenceInDays(endDate, now);
+      const endDateMinusDays = subDays(endDate, daysRemaining);
+      const hoursRemaining = differenceInHours(endDateMinusDays, now);
+      const endDateMinusDaysHours = subHours(endDateMinusDays, hoursRemaining);
+      const minutesRemaining = differenceInMinutes(endDateMinusDaysHours, now);
+      const endDateMinusDaysHoursMinutes = subMinutes(
+        endDateMinusDaysHours,
+        minutesRemaining,
+      );
+      const secondsRemaining = differenceInSeconds(
+        endDateMinusDaysHoursMinutes,
+        now,
+      );
+      this.setState({
+        timeRemaining: `${daysRemaining}:${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`,
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   succeedChallenge = async () => {
     this.setState({ succeed: true });
     // Update challenge
@@ -70,36 +106,6 @@ class RawChallengeTaken extends Component<Props, State> {
         });
     });
   };
-
-  async componentDidMount() {
-    const startDate = toDate(this.props.challengeTaken.timestamp);
-    const endDate = addDays(startDate, this.props.challengeTaken.duration);
-    const interval = setInterval(() => {
-      const now = toDate(Date.now());
-
-      if (isAfter(now, endDate)) {
-        this.succeedChallenge();
-        clearInterval(interval);
-      }
-
-      const daysRemaining = differenceInDays(endDate, now);
-      const endDateMinusDays = subDays(endDate, daysRemaining);
-      const hoursRemaining = differenceInHours(endDateMinusDays, now);
-      const endDateMinusDaysHours = subHours(endDateMinusDays, hoursRemaining);
-      const minutesRemaining = differenceInMinutes(endDateMinusDaysHours, now);
-      const endDateMinusDaysHoursMinutes = subMinutes(
-        endDateMinusDaysHours,
-        minutesRemaining,
-      );
-      const secondsRemaining = differenceInSeconds(
-        endDateMinusDaysHoursMinutes,
-        now,
-      );
-      this.setState({
-        timeRemaining: `${daysRemaining}:${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`,
-      });
-    }, 1000);
-  }
 
   render() {
     const { challengeTaken, failChallenge, reload, navigation } = this.props;
