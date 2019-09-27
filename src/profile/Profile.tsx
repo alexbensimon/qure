@@ -51,7 +51,7 @@ export class Profile extends Component<Props, State> {
             size="medium"
             containerStyle={styles.item}
           />
-          <Text h4 style={{ ...styles.item, ...styles.name }}>
+          <Text h4 style={[styles.item, styles.name]}>
             {currentUser.name}
           </Text>
           <Button

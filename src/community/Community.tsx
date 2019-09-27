@@ -84,10 +84,10 @@ export class Community extends Component<{}, State> {
                 <View style={styles.nameContainer}>
                   <Text
                     h4
-                    style={{
-                      ...styles.item,
-                      ...(person.isCurrentUser ? styles.textSelf : styles.text),
-                    }}
+                    style={[
+                      styles.item,
+                      person.isCurrentUser ? styles.textSelf : styles.text,
+                    ]}
                   >
                     {i + 1}.
                   </Text>
