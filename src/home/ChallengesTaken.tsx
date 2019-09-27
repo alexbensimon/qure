@@ -21,7 +21,9 @@ class RawChallengesTaken extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    await this.fetchData();
+    this.props.navigation.addListener('willFocus', () => {
+      this.fetchData();
+    });
   }
 
   fetchData = async () => {
