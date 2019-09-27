@@ -130,7 +130,7 @@ class RawChallengeTaken extends Component<Props, State> {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.push('Challenge', {
+          navigation.push('HomeChallenge', {
             challengeId: challengeTaken.challengeId,
           });
         }}

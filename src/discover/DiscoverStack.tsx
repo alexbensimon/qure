@@ -12,13 +12,13 @@ export const DiscoverStack = createStackNavigator(
         title: 'Catégories',
       },
     },
-    Challenges: {
+    DiscoverChallenges: {
       screen: DiscoverChallenges,
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.params.topic,
       }),
     },
-    Challenge: {
+    DiscoverChallenge: {
       screen: DiscoverChallenge,
     },
   },

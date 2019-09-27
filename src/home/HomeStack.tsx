@@ -12,7 +12,7 @@ export const HomeStack = createStackNavigator(
         headerBackTitle: 'Home',
       },
     },
-    Challenge: {
+    HomeChallenge: {
       screen: HomeChallenge,
     },
   },

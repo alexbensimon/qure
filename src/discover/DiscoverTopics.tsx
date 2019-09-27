@@ -42,7 +42,7 @@ export class DiscoverTopics extends Component<Props, State> {
               <Button
                 title={topic}
                 key={topic}
-                onPress={() => navigation.push('Challenges', { topic })}
+                onPress={() => navigation.push('DiscoverChallenges', { topic })}
                 buttonStyle={styles.topicButton}
                 titleStyle={styles.topicTitle}
               ></Button>

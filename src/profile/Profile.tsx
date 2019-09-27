@@ -5,12 +5,15 @@ import { Avatar, Button, Text } from 'react-native-elements';
 import { colors } from '../colors';
 import { User } from '../globalTypes';
 import { ProfileCoachContainer } from './ProfileCoachContainer';
+import { NavigationScreenProps } from 'react-navigation';
+
+type Props = NavigationScreenProps;
 
 type State = {
   currentUser: User | null;
 };
 
-export class Profile extends Component<{}, State> {
+export class Profile extends Component<Props, State> {
   state: State = {
     currentUser: null,
   };
@@ -25,6 +28,10 @@ export class Profile extends Component<{}, State> {
       this.setState({ currentUser: userQuerySnapshot.data() as User });
     }
   }
+
+  showHistory = () => {
+    this.props.navigation.push('HistoryList');
+  };
 
   logOut = async () => {
     await firebase.auth().signOut();
@@ -48,10 +55,17 @@ export class Profile extends Component<{}, State> {
             {currentUser.name}
           </Text>
           <Button
+            title="Historique"
+            buttonStyle={styles.button}
+            containerStyle={styles.item}
+            titleStyle={styles.buttonText}
+            onPress={this.showHistory}
+          />
+          <Button
             title="Déconnexion"
             onPress={this.logOut}
             buttonStyle={styles.button}
-            titleStyle={styles.buttonText}
+            titleStyle={styles.logoutText}
           ></Button>
         </View>
         <ProfileCoachContainer />
@@ -80,5 +94,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.primary,
     fontFamily: 'concert-one-regular',
+  },
+  logoutText: {
+    fontFamily: 'concert-one-regular',
+    color: colors.alert,
   },
 });

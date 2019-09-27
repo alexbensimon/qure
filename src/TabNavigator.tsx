@@ -6,14 +6,14 @@ import { colors } from './colors';
 import { Community } from './community/Community';
 import { DiscoverStack } from './discover/DiscoverStack';
 import { HomeStack } from './home/HomeStack';
-import { Profile } from './profile/Profile';
+import { ProfileStack } from './profile/ProfileStack';
 
 const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Découvrir: DiscoverStack,
     Communauté: Community,
-    Profil: Profile,
+    Profil: ProfileStack,
   },
   {
     // @ts-ignore
