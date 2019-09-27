@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, ActivityIndicator } from 'react-native';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { HistoryChallenge } from './HistoryChallenge';
@@ -9,15 +9,19 @@ import { toDate, isBefore } from 'date-fns';
 
 type State = {
   challengesTakenHistory: Array<ChallengeTakenType>;
+  isLoading: boolean;
 };
 
 export class HistoryList extends Component<{}, State> {
   state: State = {
     challengesTakenHistory: null,
+    isLoading: true,
   };
 
-  componentDidMount() {
-    this.fetchData();
+  async componentDidMount() {
+    this.setState({ isLoading: true });
+    await this.fetchData();
+    this.setState({ isLoading: false });
   }
 
   fetchData = async () => {
@@ -62,8 +66,12 @@ export class HistoryList extends Component<{}, State> {
   };
 
   render() {
-    const { challengesTakenHistory } = this.state;
-    return challengesTakenHistory === null ? null : (
+    const { challengesTakenHistory, isLoading } = this.state;
+    return isLoading ? (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    ) : (
       <>
         <View style={styles.viewContainer}>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -82,6 +90,11 @@ export class HistoryList extends Component<{}, State> {
 }
 
 const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   viewContainer: {
     flex: 1,
     backgroundColor: colors.white,
