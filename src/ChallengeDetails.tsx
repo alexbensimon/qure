@@ -106,7 +106,7 @@ class RawChallengeDetails extends Component<Props, State> {
 
     const { navigation } = this.props;
     const {
-      challenge: { title, subTitle, description, rules, duration },
+      challenge: { title, subTitle, description, rules, duration, level },
       challengeTaken,
       showWarning,
     } = this.state;
@@ -142,6 +142,12 @@ class RawChallengeDetails extends Component<Props, State> {
                 </Text>
               ))}
               <Text style={styles.item}></Text>
+              <Text h4 style={styles.indicator}>
+                Difficulté
+              </Text>
+              <Text h2 style={styles.item}>
+                {level} point{level > 1 && 's'}
+              </Text>
               <Text h4 style={styles.indicator}>
                 Durée
               </Text>
