@@ -12,7 +12,7 @@ import {
 } from 'date-fns';
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Alert } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import { NavigationScreenProps, withNavigation } from 'react-navigation';
 import { colors } from '../colors';
@@ -107,8 +107,25 @@ class RawChallengeTaken extends Component<Props, State> {
     });
   };
 
+  tryFailChallenge = () => {
+    Alert.alert(
+      'Challenge raté 😔',
+      "As-tu vraiment raté ce challenge ? Tu ne gagneras donc pas de points mais rien ne t'empêche de recommencer ! Merci pour ton honnêteté.",
+      [
+        {
+          text: "Oui j'ai raté",
+          onPress: this.props.failChallenge,
+        },
+        {
+          text: "Non promis je n'ai pas raté",
+          style: 'cancel',
+        },
+      ],
+    );
+  };
+
   render() {
-    const { challengeTaken, failChallenge, reload, navigation } = this.props;
+    const { challengeTaken, reload, navigation } = this.props;
     const { timeRemaining, succeed } = this.state;
     return (
       <TouchableOpacity
@@ -120,14 +137,12 @@ class RawChallengeTaken extends Component<Props, State> {
       >
         <View style={styles.card}>
           {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
-          <Text h4 style={styles.title}>
-            {challengeTaken.title}
-          </Text>
+          <Text style={styles.title}>{challengeTaken.title}</Text>
           <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
           {!succeed ? (
             <Button
               title="J'ai raté"
-              onPress={failChallenge}
+              onPress={this.tryFailChallenge}
               containerStyle={styles.buttonContainer}
               buttonStyle={styles.button}
               titleStyle={styles.failButtonTitle}
@@ -164,6 +179,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     marginBottom: 5,
     textAlign: 'center',
+    fontSize: 20,
   },
   subTitle: {
     fontFamily: 'concert-one-regular',
@@ -171,6 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginHorizontal: 8,
     textAlign: 'center',
+    fontSize: 15,
   },
   time: {
     fontFamily: 'concert-one-regular',
