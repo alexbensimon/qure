@@ -157,11 +157,14 @@ const styles = StyleSheet.create({
     fontFamily: 'concert-one-regular',
     color: colors.primary,
     marginBottom: 5,
+    textAlign: 'center',
   },
   subTitle: {
     fontFamily: 'concert-one-regular',
     color: colors.light,
     marginBottom: 10,
+    marginHorizontal: 8,
+    textAlign: 'center',
   },
   time: {
     fontFamily: 'concert-one-regular',
@@ -174,6 +177,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.light,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   failButtonTitle: {
     color: colors.alert,
