@@ -1,14 +1,16 @@
 import React, { FC } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { NavigationScreenProps, withNavigation } from 'react-navigation';
+import { withNavigation } from 'react-navigation';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { toDate, lightFormat } from 'date-fns';
+import { NavigationStackProp } from 'react-navigation-stack';
 
 type Props = {
   challengeTaken: ChallengeTakenType;
-} & NavigationScreenProps;
+  navigation: NavigationStackProp;
+};
 
 const RawHistoryChallenge: FC<Props> = ({
   challengeTaken: { challengeId, timestamp, title, subTitle, succeed, level },

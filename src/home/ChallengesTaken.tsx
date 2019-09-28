@@ -5,9 +5,9 @@ import { Text, Button } from 'react-native-elements';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
-import { withNavigation, NavigationScreenProps } from 'react-navigation';
+import { withNavigation, NavigationInjectedProps } from 'react-navigation';
 
-type Props = NavigationScreenProps;
+type Props = NavigationInjectedProps;
 
 type State = {
   challengesTaken: Array<ChallengeTakenType>;

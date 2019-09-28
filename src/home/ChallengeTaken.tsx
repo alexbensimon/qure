@@ -14,15 +14,17 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View, Alert } from 'react-native';
 import { Button, Text } from 'react-native-elements';
-import { NavigationScreenProps, withNavigation } from 'react-navigation';
+import { withNavigation } from 'react-navigation';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
+import { NavigationStackProp } from 'react-navigation-stack';
 
 type Props = {
   challengeTaken: ChallengeTakenType;
   failChallenge: () => void;
   reload: () => void;
-} & NavigationScreenProps;
+  navigation: NavigationStackProp;
+};
 
 type State = {
   timeRemaining: string;

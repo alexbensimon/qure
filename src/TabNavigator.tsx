@@ -16,7 +16,6 @@ const TabNavigator = createBottomTabNavigator(
     Profil: ProfileStack,
   },
   {
-    // @ts-ignore
     tabBarOptions: {
       activeTintColor: colors.primary,
       inactiveTintColor: colors.light,
@@ -27,7 +26,6 @@ const TabNavigator = createBottomTabNavigator(
         fontFamily: 'concert-one-regular',
       },
     },
-    // @ts-ignore
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ tintColor }: { tintColor: string }) => {
         const { routeName } = navigation.state;
@@ -48,5 +46,4 @@ const TabNavigator = createBottomTabNavigator(
   },
 );
 
-// @ts-ignore
 export default createAppContainer(TabNavigator);

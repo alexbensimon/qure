@@ -5,9 +5,11 @@ import { Avatar, Button, Text } from 'react-native-elements';
 import { colors } from '../colors';
 import { User } from '../globalTypes';
 import { ProfileCoachContainer } from './ProfileCoachContainer';
-import { NavigationScreenProps } from 'react-navigation';
+import { NavigationStackProp } from 'react-navigation-stack';
 
-type Props = NavigationScreenProps;
+type Props = {
+  navigation: NavigationStackProp;
+};
 
 type State = {
   currentUser: User | null;

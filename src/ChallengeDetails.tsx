@@ -5,7 +5,7 @@ import { Button, Overlay, Text } from 'react-native-elements';
 import {
   ScrollView,
   withNavigation,
-  NavigationScreenProps,
+  NavigationInjectedProps,
 } from 'react-navigation';
 import { Coach } from './Coach';
 import { colors } from './colors';
@@ -13,7 +13,7 @@ import { Challenge } from './globalTypes';
 
 type Props = {
   challengeId: Challenge['id'];
-} & NavigationScreenProps;
+} & NavigationInjectedProps;
 
 type State = {
   challenge: Challenge;

@@ -2,16 +2,19 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { NavigationScreenProps, ScrollView } from 'react-navigation';
+import { ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { DiscoverCoachContainer } from './DiscoverCoachContainer';
 import { colors } from '../colors';
+import { NavigationStackProp } from 'react-navigation-stack';
+
+type Props = {
+  navigation: NavigationStackProp;
+};
 
 type State = {
   topics: Challenge['topics'];
 };
-
-type Props = NavigationScreenProps;
 
 export class DiscoverTopics extends Component<Props, State> {
   state: State = {

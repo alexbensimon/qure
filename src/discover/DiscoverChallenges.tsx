@@ -2,12 +2,15 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { NavigationScreenProps, ScrollView } from 'react-navigation';
+import { ScrollView } from 'react-navigation';
 import { Challenge } from '../globalTypes';
 import { Coach } from '../Coach';
 import { colors } from '../colors';
+import { NavigationStackProp } from 'react-navigation-stack';
 
-type Props = NavigationScreenProps;
+type Props = {
+  navigation: NavigationStackProp;
+};
 
 type State = {
   challenges: Array<Challenge>;
