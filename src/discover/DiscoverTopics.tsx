@@ -27,8 +27,11 @@ export class DiscoverTopics extends Component<Props, State> {
     querySnapshot.forEach(doc => {
       topics.push(doc.data().value);
     });
+    const topicsSorted = topics.sort((topic1, topic2) =>
+      topic1.localeCompare(topic2),
+    );
 
-    this.setState({ topics });
+    this.setState({ topics: topicsSorted });
   }
 
   render() {
