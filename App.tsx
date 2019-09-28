@@ -15,6 +15,8 @@ export default class App extends Component<{}, State> {
 
   async componentDidMount() {
     YellowBox.ignoreWarnings(['Setting a timer']);
+    // eslint-disable-next-line no-console
+    console.ignoredYellowBox = ['Setting a timer'];
     await Font.loadAsync({
       'concert-one-regular': require('./assets/fonts/ConcertOne-Regular.ttf'),
     });
