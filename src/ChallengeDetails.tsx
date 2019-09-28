@@ -1,12 +1,8 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button, Overlay, Text } from 'react-native-elements';
-import {
-  ScrollView,
-  withNavigation,
-  NavigationInjectedProps,
-} from 'react-navigation';
+import { Alert, StyleSheet, View } from 'react-native';
+import { Button, Text } from 'react-native-elements';
+import { NavigationInjectedProps, ScrollView, withNavigation } from 'react-navigation';
 import { Coach } from './Coach';
 import { colors } from './colors';
 import { Challenge } from './globalTypes';
@@ -18,14 +14,12 @@ type Props = {
 type State = {
   challenge: Challenge;
   challengeTaken: boolean | null;
-  showWarning: boolean;
 };
 
 class RawChallengeDetails extends Component<Props, State> {
   state: State = {
     challenge: null,
     challengeTaken: null,
-    showWarning: false,
   };
 
   async componentDidMount() {
@@ -74,10 +68,22 @@ class RawChallengeDetails extends Component<Props, State> {
       currentChallengesTaken.push(doc.id);
     });
     if (currentChallengesTaken.length >= 3) {
-      this.setState({ showWarning: true });
+      this.showWarning();
     } else {
       this.takeChallenge();
     }
+  };
+
+  showWarning = () => {
+    Alert.alert(
+      '🙅‍',
+      'Tu ne peux pas relever plus de 3 challenges en même temps. Fais nous confiance, tu auras de meilleurs résultats.',
+      [
+        {
+          text: 'Ok',
+        },
+      ],
+    );
   };
 
   takeChallenge = () => {
@@ -108,7 +114,6 @@ class RawChallengeDetails extends Component<Props, State> {
     const {
       challenge: { title, subTitle, description, rules, duration, level },
       challengeTaken,
-      showWarning,
     } = this.state;
     return (
       <>
@@ -173,19 +178,6 @@ class RawChallengeDetails extends Component<Props, State> {
                 ></Button>
               )}
             </View>
-            <Overlay
-              isVisible={showWarning}
-              onBackdropPress={() => this.setState({ showWarning: false })}
-              overlayStyle={styles.overlay}
-            >
-              <View style={styles.overlayContent}>
-                <Text style={styles.overlayText}>🙅‍</Text>
-                <Text style={styles.overlayText}>
-                  Tu ne peux pas relever plus de 3 challenges en même temps.
-                  Fais nous confiance, tu auras de meilleurs résultats.
-                </Text>
-              </View>
-            </Overlay>
           </ScrollView>
         </View>
         <Coach sentences={[`J'adore le challenge ${title}`]} />
@@ -248,21 +240,5 @@ const styles = StyleSheet.create({
     fontFamily: 'concert-one-regular',
     fontSize: 40,
     color: colors.alert,
-  },
-  overlay: {
-    flex: 0.5,
-    borderRadius: 10,
-    backgroundColor: colors.white,
-  },
-  overlayContent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  overlayText: {
-    fontFamily: 'concert-one-regular',
-    color: colors.dark,
-    fontSize: 30,
-    textAlign: 'center',
   },
 });
