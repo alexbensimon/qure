@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     flexDirection: 'row',
+    maxWidth: '70%',
   },
   item: {
     marginRight: 10,
