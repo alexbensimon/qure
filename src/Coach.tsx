@@ -48,13 +48,12 @@ export class Coach extends Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.2,
     flexDirection: 'row',
     alignItems: 'flex-end',
     backgroundColor: colors.white,
   },
   iconContainer: {
-    width: '22%',
+    width: 80,
   },
   coachIcon: {
     fontSize: 75,
@@ -63,8 +62,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark,
     borderRadius: 10,
     height: 60,
-    maxWidth: '75%',
     marginBottom: 10,
+    marginHorizontal: 10,
   },
   touchStyle: {
     flex: 1,
