@@ -4,9 +4,10 @@
     "slug": "qure",
     "privacy": "unlisted",
     "sdkVersion": "35.0.0",
-    "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "platforms": ["ios", "android"],
+    "version": "0.1.0",
     "orientation": "portrait",
+    "primaryColor": "#EEC756",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -19,10 +20,13 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.qure.qureapp"
+      "bundleIdentifier": "com.qureinc.qure",
+      "buildNumber": "1"
     },
     "android": {
-      "package": "com.qure.qureapp"
+      "package": "com.qure.qureapp",
+      "versionCode": 1,
+      "permissions": []
     },
     "facebookScheme": "fb2808452099169831",
     "facebookAppId": "2808452099169831",
