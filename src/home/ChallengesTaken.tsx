@@ -5,7 +5,11 @@ import { Text, Button } from 'react-native-elements';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
-import { withNavigation, NavigationInjectedProps } from 'react-navigation';
+import {
+  withNavigation,
+  NavigationInjectedProps,
+  NavigationEventSubscription,
+} from 'react-navigation';
 
 type Props = NavigationInjectedProps;
 
@@ -20,10 +24,16 @@ class RawChallengesTaken extends Component<Props, State> {
     challengesTaken: null,
   };
 
+  focusListener: NavigationEventSubscription = null;
+
   async componentDidMount() {
-    this.props.navigation.addListener('willFocus', () => {
+    this.focusListener = this.props.navigation.addListener('willFocus', () => {
       this.fetchData();
     });
+  }
+
+  componentWillUnmount() {
+    this.focusListener.remove();
   }
 
   fetchData = async () => {
