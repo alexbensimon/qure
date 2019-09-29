@@ -12,7 +12,7 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Découvrir: DiscoverStack,
-    Communauté: Community,
+    Qommunauté: Community,
     Profil: ProfileStack,
   },
   {
@@ -34,7 +34,7 @@ const TabNavigator = createBottomTabNavigator(
           iconName = 'home';
         } else if (routeName === 'Découvrir') {
           iconName = 'find';
-        } else if (routeName === 'Communauté') {
+        } else if (routeName === 'Qommunauté') {
           iconName = 'earth';
         } else if (routeName === 'Profil') {
           iconName = 'user';
