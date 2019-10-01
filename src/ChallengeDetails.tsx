@@ -2,7 +2,11 @@ import firebase from 'firebase';
 import React, { Component } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
-import { NavigationInjectedProps, ScrollView, withNavigation } from 'react-navigation';
+import {
+  NavigationInjectedProps,
+  ScrollView,
+  withNavigation,
+} from 'react-navigation';
 import { Coach } from './Coach';
 import { colors } from './colors';
 import { Challenge } from './globalTypes';
@@ -141,11 +145,14 @@ class RawChallengeDetails extends Component<Props, State> {
               <Text h4 style={styles.indicator}>
                 Règles
               </Text>
-              {rules.map((rule, i) => (
-                <Text h4 key={i} style={styles.rule}>
-                  👉 {rule}
-                </Text>
-              ))}
+              {rules.map(
+                rule =>
+                  !!rule && (
+                    <Text h4 key={rule} style={styles.rule}>
+                      👉 {rule}
+                    </Text>
+                  ),
+              )}
               <Text style={styles.item}></Text>
               <Text h4 style={styles.indicator}>
                 Difficulté
