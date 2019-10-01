@@ -22,7 +22,7 @@ export class DiscoverTopics extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const topics = [];
+    const topics: Challenge['topics'] = [];
     const querySnapshot = await firebase
       .firestore()
       .collection('topics')

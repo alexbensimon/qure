@@ -30,12 +30,15 @@ export class DiscoverChallenges extends Component<Props, State> {
       .collection('challenges')
       .where('topics', 'array-contains', topic)
       .get();
-    const challenges = [];
+    const challenges: Array<Challenge> = [];
     querySnapshot.forEach(doc => {
-      challenges.push({ ...doc.data(), id: doc.id });
+      challenges.push({ ...doc.data(), id: doc.id } as Challenge);
     });
+    const challengesSorted = challenges.sort((challenge1, challenge2) =>
+      challenge1.title.localeCompare(challenge2.title),
+    );
 
-    this.setState({ challenges });
+    this.setState({ challenges: challengesSorted });
   }
 
   render() {
