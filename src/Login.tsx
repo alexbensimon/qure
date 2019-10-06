@@ -36,7 +36,7 @@ const facebookLogIn = async () => {
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       '2808452099169831',
       {
-        permissions: ['public_profile', 'user_friends'],
+        permissions: ['public_profile'],
       },
     );
     if (type === 'success') {
@@ -62,34 +62,6 @@ const facebookLogIn = async () => {
           },
           { merge: true },
         );
-        const { data: fbFriends } = await (await fetch(
-          `https://graph.facebook.com/${user.providerData[0].uid}/friends?access_token=${token}`,
-        )).json();
-        const promises = [];
-        fbFriends.forEach(friend => {
-          promises.push(
-            firebase
-              .firestore()
-              .collection('users')
-              .where('facebookId', '==', friend.id)
-              .limit(1)
-              .get(),
-          );
-        });
-        const querySnapshots = await Promise.all(promises);
-        const friends = [];
-        querySnapshots.forEach(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            friends.push(doc);
-          });
-        });
-        friends.forEach(friend => {
-          firebase
-            .firestore()
-            .collection(`users/${user.uid}/friends`)
-            .doc(friend.id)
-            .set(friend.data());
-        });
       }
     } else {
       // eslint-disable-next-line no-console

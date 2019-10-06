@@ -91,22 +91,6 @@ class RawChallengeTaken extends Component<Props, State> {
           this.props.challengeTaken.level,
         ),
       });
-    // Increase my points for my friends
-    const querySnapshot = await firebase
-      .firestore()
-      .collection(`/users/${firebase.auth().currentUser.uid}/friends`)
-      .get();
-    querySnapshot.forEach(doc => {
-      firebase
-        .firestore()
-        .collection(`/users/${doc.id}/friends`)
-        .doc(firebase.auth().currentUser.uid)
-        .update({
-          points: firebase.firestore.FieldValue.increment(
-            this.props.challengeTaken.level,
-          ),
-        });
-    });
   };
 
   tryFailChallenge = () => {

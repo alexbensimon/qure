@@ -1,21 +1,19 @@
 import firebase from 'firebase';
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView, RefreshControl } from 'react-native';
-import { Text, Avatar } from 'react-native-elements';
-import { Friend, User } from '../globalTypes';
-import { CommunityCoachContainer } from './CommunityCoachContainer';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { Avatar, Text } from 'react-native-elements';
 import { colors } from '../colors';
+import { User } from '../globalTypes';
+import { CommunityCoachContainer } from './CommunityCoachContainer';
 
 type State = {
-  currentUser: User;
-  friends: Array<Friend>;
+  users: Array<User>;
   refreshing: boolean;
 };
 
 export class Community extends Component<{}, State> {
   state: State = {
-    currentUser: null,
-    friends: [],
+    users: [],
     refreshing: false,
   };
 
@@ -24,28 +22,18 @@ export class Community extends Component<{}, State> {
   }
 
   fetchData = async () => {
-    // fetch current user
-    const userQuerySnapshot = await firebase
-      .firestore()
-      .collection('/users')
-      .doc(firebase.auth().currentUser.uid)
-      .get();
-    let currentUser = null;
-    if (userQuerySnapshot.exists) {
-      currentUser = { ...userQuerySnapshot.data(), id: userQuerySnapshot.id };
-    }
-
-    // Fetch friends
     const querySnapshot = await firebase
       .firestore()
-      .collection(`/users/${firebase.auth().currentUser.uid}/friends`)
+      .collection('users')
       .get();
-    const friends = [];
+    const users = [];
     querySnapshot.forEach(doc => {
-      friends.push({ ...doc.data(), id: doc.id });
+      users.push({ ...doc.data(), id: doc.id });
     });
 
-    this.setState({ currentUser, friends });
+    const usersSorted = users.sort((a, b) => (b.points || 0) - (a.points || 0));
+
+    this.setState({ users: usersSorted });
   };
 
   handleRefresh = async () => {
@@ -55,15 +43,10 @@ export class Community extends Component<{}, State> {
   };
 
   render() {
-    const { currentUser, friends, refreshing } = this.state;
-    const people: Array<(Friend | User) & { isCurrentUser?: boolean }> = [
-      ...friends,
-      { ...currentUser, isCurrentUser: true },
-    ];
-    const peopleSorted = people.sort(
-      (a, b) => (b.points || 0) - (a.points || 0),
-    );
-    if (currentUser === null && friends.length === 0) return null;
+    const { users, refreshing } = this.state;
+    const currentUserId = firebase.auth().currentUser.uid;
+
+    if (users.length === 0) return null;
     return (
       <>
         <View style={styles.viewContainer}>
@@ -79,14 +62,16 @@ export class Community extends Component<{}, State> {
             <Text h1 style={styles.title}>
               Classement
             </Text>
-            {peopleSorted.map((person, i) => (
+            {users.map((person, i) => (
               <View style={styles.line} key={person.id}>
                 <View style={styles.nameContainer}>
                   <Text
                     h4
                     style={[
                       styles.item,
-                      person.isCurrentUser ? styles.textSelf : styles.text,
+                      person.id === currentUserId
+                        ? styles.textSelf
+                        : styles.text,
                     ]}
                   >
                     {i + 1}.
@@ -100,14 +85,20 @@ export class Community extends Component<{}, State> {
                   />
                   <Text
                     h4
-                    style={person.isCurrentUser ? styles.textSelf : styles.text}
+                    style={
+                      person.id === currentUserId
+                        ? styles.textSelf
+                        : styles.text
+                    }
                   >
                     {person.name}
                   </Text>
                 </View>
                 <Text
                   h4
-                  style={person.isCurrentUser ? styles.textSelf : styles.text}
+                  style={
+                    person.id === currentUserId ? styles.textSelf : styles.text
+                  }
                 >
                   {person.points || 0}
                 </Text>
