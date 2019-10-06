@@ -21,11 +21,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.qureinc.qure",
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "package": "com.qure.qureapp",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": []
     },
     "facebookScheme": "fb2808452099169831",
