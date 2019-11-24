@@ -1,27 +1,21 @@
 import firebase from 'firebase';
-import React, { Component } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import { colors } from '../colors';
 import { User } from '../globalTypes';
 import { CommunityCoachContainer } from './CommunityCoachContainer';
 
-type State = {
-  users: Array<User>;
-  refreshing: boolean;
-};
+export const Community: FC = () => {
+  const currentUserId = firebase.auth().currentUser.uid;
+  const [users, setUsers] = useState<Array<User>>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-export class Community extends Component<{}, State> {
-  state: State = {
-    users: [],
-    refreshing: false,
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  async componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData = async () => {
+  const fetchData = async () => {
     const querySnapshot = await firebase
       .firestore()
       .collection('users')
@@ -33,84 +27,72 @@ export class Community extends Component<{}, State> {
 
     const usersSorted = users.sort((a, b) => (b.points || 0) - (a.points || 0));
 
-    this.setState({ users: usersSorted });
+    setUsers(usersSorted);
   };
 
-  handleRefresh = async () => {
-    this.setState({ refreshing: true });
-    await this.fetchData();
-    this.setState({ refreshing: false });
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
   };
 
-  render() {
-    const { users, refreshing } = this.state;
-    const currentUserId = firebase.auth().currentUser.uid;
-
-    if (users.length === 0) return null;
-    return (
-      <>
-        <View style={styles.viewContainer}>
-          <ScrollView
-            contentContainerStyle={styles.scrollViewContainer}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={this.handleRefresh}
-              />
-            }
-          >
-            <Text h1 style={styles.title}>
-              Classement
-            </Text>
-            {users.map((person, i) => (
-              <View style={styles.line} key={person.id}>
-                <View style={styles.nameContainer}>
-                  <Text
-                    h4
-                    style={[
-                      styles.item,
-                      person.id === currentUserId
-                        ? styles.textSelf
-                        : styles.text,
-                    ]}
-                  >
-                    {i + 1}.
-                  </Text>
-                  <Avatar
-                    rounded
-                    source={{
-                      uri: person.photoUrl,
-                    }}
-                    containerStyle={styles.item}
-                  />
-                  <Text
-                    h4
-                    style={
-                      person.id === currentUserId
-                        ? styles.textSelf
-                        : styles.text
-                    }
-                  >
-                    {person.name}
-                  </Text>
-                </View>
+  if (users.length === 0) return null;
+  return (
+    <>
+      <View style={styles.viewContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        >
+          <Text h1 style={styles.title}>
+            Classement
+          </Text>
+          {users.map((person, i) => (
+            <View style={styles.line} key={person.id}>
+              <View style={styles.nameContainer}>
+                <Text
+                  h4
+                  style={[
+                    styles.item,
+                    person.id === currentUserId ? styles.textSelf : styles.text,
+                  ]}
+                >
+                  {i + 1}.
+                </Text>
+                <Avatar
+                  rounded
+                  source={{
+                    uri: person.photoUrl,
+                  }}
+                  containerStyle={styles.item}
+                />
                 <Text
                   h4
                   style={
                     person.id === currentUserId ? styles.textSelf : styles.text
                   }
                 >
-                  {person.points || 0}
+                  {person.name}
                 </Text>
               </View>
-            ))}
-          </ScrollView>
-        </View>
-        <CommunityCoachContainer />
-      </>
-    );
-  }
-}
+              <Text
+                h4
+                style={
+                  person.id === currentUserId ? styles.textSelf : styles.text
+                }
+              >
+                {person.points || 0}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+      <CommunityCoachContainer />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   viewContainer: {
