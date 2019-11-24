@@ -1,17 +1,20 @@
 import { useEffect, useState, useCallback } from 'react';
 
-export const useLoader = (asyncFunction: () => Promise<void>) => {
+export const useLoader = (
+  asyncFunction: () => Promise<void>,
+  deps: Array<any> = [],
+) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const func = useCallback(asyncFunction, []);
+  const memoizedFunction = useCallback(asyncFunction, deps);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      await func();
+      await memoizedFunction();
       setIsLoading(false);
     })();
-  }, [func]);
+  }, [memoizedFunction]);
 
   return isLoading;
 };

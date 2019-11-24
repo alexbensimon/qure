@@ -1,10 +1,12 @@
 import firebase from 'firebase';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-navigation';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { colors } from '../colors';
+import { PageLoader } from '../components/PageLoader';
+import { useLoader } from '../custom-hooks/useLoader';
 import { Challenge } from '../globalTypes';
 import { DiscoverCoachContainer } from './DiscoverCoachContainer';
 
@@ -15,25 +17,27 @@ type Props = {
 export const DiscoverTopics: FC<Props> = ({ navigation }) => {
   const [topics, setTopics] = useState<Challenge['topics']>([]);
 
-  useEffect(() => {
-    (async () => {
-      const topicsTemp: Challenge['topics'] = [];
-      const querySnapshot = await firebase
-        .firestore()
-        .collection('topics')
-        .get();
-      querySnapshot.forEach(doc => {
-        topicsTemp.push(doc.data().value);
-      });
-      const topicsSorted = topicsTemp.sort((topic1, topic2) =>
-        topic1.localeCompare(topic2),
-      );
+  const fetchData = async () => {
+    const topicsTemp: Challenge['topics'] = [];
+    const querySnapshot = await firebase
+      .firestore()
+      .collection('topics')
+      .get();
+    querySnapshot.forEach(doc => {
+      topicsTemp.push(doc.data().value);
+    });
+    const topicsSorted = topicsTemp.sort((topic1, topic2) =>
+      topic1.localeCompare(topic2),
+    );
 
-      setTopics(topicsSorted);
-    })();
-  }, []);
+    setTopics(topicsSorted);
+  };
 
-  return (
+  const isLoading = useLoader(fetchData);
+
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <>
       <View style={styles.viewContainer}>
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>

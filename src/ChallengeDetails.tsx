@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import {
@@ -9,6 +9,8 @@ import {
 } from 'react-navigation';
 import { Coach } from './Coach';
 import { colors } from './colors';
+import { PageLoader } from './components/PageLoader';
+import { useLoader } from './custom-hooks/useLoader';
 import { Challenge } from './globalTypes';
 
 type Props = {
@@ -19,38 +21,38 @@ const RawChallengeDetails: FC<Props> = ({ challengeId, navigation }) => {
   const [challenge, setChallenge] = useState<Challenge>(null);
   const [challengeTaken, setChallengeTaken] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      // Fetch challenge details
-      const challengePromise = firebase
-        .firestore()
-        .collection('challenges')
-        .doc(challengeId)
-        .get();
+  const fetchData = async () => {
+    // Fetch challenge details
+    const challengePromise = firebase
+      .firestore()
+      .collection('challenges')
+      .doc(challengeId)
+      .get();
 
-      // Fetch challenges taken
-      const challengeTakenPromise = firebase
-        .firestore()
-        .collection(`users/${firebase.auth().currentUser.uid}/challengesTaken`)
-        .where('challengeId', '==', challengeId)
-        .where('succeed', '==', null)
-        .limit(1)
-        .get();
+    // Fetch challenges taken
+    const challengeTakenPromise = firebase
+      .firestore()
+      .collection(`users/${firebase.auth().currentUser.uid}/challengesTaken`)
+      .where('challengeId', '==', challengeId)
+      .where('succeed', '==', null)
+      .limit(1)
+      .get();
 
-      const [challengeDoc, challengeTakenQuerySnapshot] = await Promise.all([
-        challengePromise,
-        challengeTakenPromise,
-      ]);
+    const [challengeDoc, challengeTakenQuerySnapshot] = await Promise.all([
+      challengePromise,
+      challengeTakenPromise,
+    ]);
 
-      const sameChallengeTaken = [];
-      challengeTakenQuerySnapshot.forEach(doc => {
-        sameChallengeTaken.push(doc.id);
-      });
+    const sameChallengeTaken = [];
+    challengeTakenQuerySnapshot.forEach(doc => {
+      sameChallengeTaken.push(doc.id);
+    });
 
-      setChallenge(challengeDoc.data() as Challenge);
-      setChallengeTaken(sameChallengeTaken.length > 0);
-    })();
-  }, [challengeId]);
+    setChallenge(challengeDoc.data() as Challenge);
+    setChallengeTaken(sameChallengeTaken.length > 0);
+  };
+
+  const isLoading = useLoader(fetchData, [challengeId]);
 
   const tryTakeChallenge = async () => {
     const querySnapshot = await firebase
@@ -98,9 +100,9 @@ const RawChallengeDetails: FC<Props> = ({ challengeId, navigation }) => {
     navigation.navigate('Home');
   };
 
-  if (!challenge) return null;
-
-  return (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <>
       <View style={styles.viewContainer}>
         <ScrollView>
