@@ -1,9 +1,11 @@
 import firebase from 'firebase';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { colors } from '../colors';
+import { PageLoader } from '../components/PageLoader';
+import { useLoader } from '../custom-hooks/useLoader';
 import { User } from '../globalTypes';
 import { ProfileCoachContainer } from './ProfileCoachContainer';
 
@@ -13,10 +15,6 @@ type Props = {
 
 export const Profile: FC<Props> = ({ navigation }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    fetchData();
-  });
 
   const fetchData = async () => {
     const userQuerySnapshot = await firebase
@@ -29,6 +27,8 @@ export const Profile: FC<Props> = ({ navigation }) => {
     }
   };
 
+  const isLoading = useLoader(fetchData);
+
   const showHistory = () => {
     navigation.push('HistoryList');
   };
@@ -37,8 +37,9 @@ export const Profile: FC<Props> = ({ navigation }) => {
     await firebase.auth().signOut();
   };
 
-  if (currentUser === null) return null;
-  return (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <>
       <View style={styles.viewContainer}>
         <Avatar
