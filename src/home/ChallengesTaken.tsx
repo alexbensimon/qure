@@ -8,6 +8,8 @@ import {
   withNavigation,
 } from 'react-navigation';
 import { colors } from '../colors';
+import { PageLoader } from '../components/PageLoader';
+import { useLoader } from '../custom-hooks/useLoader';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
 
@@ -20,10 +22,6 @@ const RawChallengesTaken: FC<Props> = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const focusListener = useRef<NavigationEventSubscription>(null);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   useEffect(() => {
     focusListener.current = navigation.addListener('willFocus', () => {
@@ -47,6 +45,8 @@ const RawChallengesTaken: FC<Props> = ({ navigation }) => {
     setChallengesTaken(challengesTaken);
   };
 
+  const isLoading = useLoader(fetchData);
+
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchData();
@@ -62,7 +62,9 @@ const RawChallengesTaken: FC<Props> = ({ navigation }) => {
     fetchData();
   };
 
-  return challengesTaken === null ? null : (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
