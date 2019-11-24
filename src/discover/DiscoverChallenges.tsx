@@ -1,75 +1,65 @@
 import firebase from 'firebase';
-import React, { Component } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-navigation';
-import { Challenge } from '../globalTypes';
+import { NavigationStackProp } from 'react-navigation-stack';
 import { Coach } from '../Coach';
 import { colors } from '../colors';
-import { NavigationStackProp } from 'react-navigation-stack';
+import { Challenge } from '../globalTypes';
 
 type Props = {
   navigation: NavigationStackProp;
 };
 
-type State = {
-  challenges: Array<Challenge>;
+export const DiscoverChallenges: FC<Props> = ({ navigation }) => {
+  const topic: Challenge['topics'][0] = navigation.getParam('topic');
+  const [challenges, setChallenges] = useState<Array<Challenge>>([]);
+
+  useEffect(() => {
+    (async () => {
+      const querySnapshot = await firebase
+        .firestore()
+        .collection('challenges')
+        .where('topics', 'array-contains', topic)
+        .get();
+      const challenges: Array<Challenge> = [];
+      querySnapshot.forEach(doc => {
+        challenges.push({ ...doc.data(), id: doc.id } as Challenge);
+      });
+      const challengesSorted = challenges.sort((challenge1, challenge2) =>
+        challenge1.title.localeCompare(challenge2.title),
+      );
+
+      setChallenges(challengesSorted);
+    })();
+  }, [topic]);
+
+  return (
+    <>
+      <View style={styles.viewContainer}>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+          {challenges.map(challenge => (
+            <Button
+              title={challenge.title}
+              key={challenge.id}
+              onPress={() =>
+                navigation.push('DiscoverChallenge', {
+                  challengeId: challenge.id,
+                })
+              }
+              buttonStyle={styles.challengeButton}
+              titleStyle={styles.challengeTitle}
+            ></Button>
+          ))}
+        </ScrollView>
+      </View>
+      <Coach
+        sentences={[`J'adore les challenge ${navigation.getParam('topic')}`]}
+      />
+    </>
+  );
 };
-
-export class DiscoverChallenges extends Component<Props, State> {
-  state: State = {
-    challenges: [],
-  };
-
-  async componentDidMount() {
-    const topic: Challenge['topics'][0] = this.props.navigation.getParam(
-      'topic',
-    );
-    const querySnapshot = await firebase
-      .firestore()
-      .collection('challenges')
-      .where('topics', 'array-contains', topic)
-      .get();
-    const challenges: Array<Challenge> = [];
-    querySnapshot.forEach(doc => {
-      challenges.push({ ...doc.data(), id: doc.id } as Challenge);
-    });
-    const challengesSorted = challenges.sort((challenge1, challenge2) =>
-      challenge1.title.localeCompare(challenge2.title),
-    );
-
-    this.setState({ challenges: challengesSorted });
-  }
-
-  render() {
-    const { navigation } = this.props;
-    const { challenges } = this.state;
-    return (
-      <>
-        <View style={styles.viewContainer}>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            {challenges.map(challenge => (
-              <Button
-                title={challenge.title}
-                key={challenge.id}
-                onPress={() =>
-                  navigation.push('DiscoverChallenge', {
-                    challengeId: challenge.id,
-                  })
-                }
-                buttonStyle={styles.challengeButton}
-                titleStyle={styles.challengeTitle}
-              ></Button>
-            ))}
-          </ScrollView>
-        </View>
-        <Coach
-          sentences={[`J'adore les challenge ${navigation.getParam('topic')}`]}
-        />
-      </>
-    );
-  }
-}
 
 const styles = StyleSheet.create({
   viewContainer: {
