@@ -1,9 +1,10 @@
 import { isBefore, toDate } from 'date-fns';
 import firebase from 'firebase';
 import React, { FC, useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Coach } from '../Coach';
 import { colors } from '../colors';
+import { PageLoader } from '../components/PageLoader';
 import { ChallengeTakenType } from '../globalTypes';
 import { HistoryChallenge } from './HistoryChallenge';
 
@@ -62,9 +63,7 @@ export const HistoryList: FC = () => {
   };
 
   return isLoading ? (
-    <View style={styles.loaderContainer}>
-      <ActivityIndicator size="large" color={colors.primary} />
-    </View>
+    <PageLoader />
   ) : (
     <>
       <View style={styles.viewContainer}>
@@ -83,11 +82,6 @@ export const HistoryList: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   viewContainer: {
     flex: 1,
     backgroundColor: colors.white,
