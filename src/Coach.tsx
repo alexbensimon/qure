@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { FC, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { colors } from './colors';
@@ -7,44 +7,30 @@ type Props = {
   sentences: Array<string>;
 };
 
-type State = {
-  currentSentenceIndex: number;
-};
+export const Coach: FC<Props> = ({ sentences }) => {
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
 
-export class Coach extends Component<Props, State> {
-  state: State = {
-    currentSentenceIndex: 0,
-  };
-
-  tellNextSentence = () => {
-    this.setState(state => ({
-      currentSentenceIndex:
-        state.currentSentenceIndex < this.props.sentences.length - 1
-          ? state.currentSentenceIndex + 1
-          : 0,
-    }));
-  };
-
-  render() {
-    const { sentences } = this.props;
-    const { currentSentenceIndex } = this.state;
-    return (
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.coachIcon}>👨‍🏫</Text>
-        </View>
-        <ScrollView style={styles.adviceContainer}>
-          <TouchableOpacity
-            onPress={this.tellNextSentence}
-            style={styles.touchStyle}
-          >
-            <Text style={styles.advice}>{sentences[currentSentenceIndex]}</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+  const tellNextSentence = () => {
+    setCurrentSentenceIndex(currentSentenceIndex =>
+      currentSentenceIndex < sentences.length - 1
+        ? currentSentenceIndex + 1
+        : 0,
     );
-  }
-}
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <Text style={styles.coachIcon}>👨‍🏫</Text>
+      </View>
+      <ScrollView style={styles.adviceContainer}>
+        <TouchableOpacity onPress={tellNextSentence} style={styles.touchStyle}>
+          <Text style={styles.advice}>{sentences[currentSentenceIndex]}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
