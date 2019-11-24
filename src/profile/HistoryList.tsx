@@ -1,10 +1,11 @@
 import { isBefore, toDate } from 'date-fns';
 import firebase from 'firebase';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Coach } from '../Coach';
 import { colors } from '../colors';
 import { PageLoader } from '../components/PageLoader';
+import { useLoader } from '../custom-hooks/useLoader';
 import { ChallengeTakenType } from '../globalTypes';
 import { HistoryChallenge } from './HistoryChallenge';
 
@@ -12,15 +13,6 @@ export const HistoryList: FC = () => {
   const [challengesTakenHistory, setChallengesTakenHistory] = useState<
     Array<ChallengeTakenType>
   >(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      await fetchData();
-      setIsLoading(false);
-    })();
-  }, []);
 
   const fetchData = async () => {
     const challengesTakenHistory: Array<ChallengeTakenType> = [];
@@ -61,6 +53,8 @@ export const HistoryList: FC = () => {
     );
     setChallengesTakenHistory(challengesTakenHistorySorted);
   };
+
+  const isLoading = useLoader(fetchData);
 
   return isLoading ? (
     <PageLoader />
