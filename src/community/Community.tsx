@@ -1,8 +1,10 @@
 import firebase from 'firebase';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import { colors } from '../colors';
+import { PageLoader } from '../components/PageLoader';
+import { useLoader } from '../custom-hooks/useLoader';
 import { User } from '../globalTypes';
 import { CommunityCoachContainer } from './CommunityCoachContainer';
 
@@ -10,10 +12,6 @@ export const Community: FC = () => {
   const currentUserId = firebase.auth().currentUser.uid;
   const [users, setUsers] = useState<Array<User>>([]);
   const [refreshing, setRefreshing] = useState(false);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const fetchData = async () => {
     const querySnapshot = await firebase
@@ -30,14 +28,17 @@ export const Community: FC = () => {
     setUsers(usersSorted);
   };
 
+  const isLoading = useLoader(fetchData);
+
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchData();
     setRefreshing(false);
   };
 
-  if (users.length === 0) return null;
-  return (
+  return isLoading ? (
+    <PageLoader />
+  ) : (
     <>
       <View style={styles.viewContainer}>
         <ScrollView
