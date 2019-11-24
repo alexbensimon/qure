@@ -1,80 +1,75 @@
 import firebase from 'firebase';
-import React, { Component } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-elements';
+import { NavigationStackProp } from 'react-navigation-stack';
 import { colors } from '../colors';
 import { User } from '../globalTypes';
 import { ProfileCoachContainer } from './ProfileCoachContainer';
-import { NavigationStackProp } from 'react-navigation-stack';
 
 type Props = {
   navigation: NavigationStackProp;
 };
 
-type State = {
-  currentUser: User | null;
-};
+export const Profile: FC<Props> = ({ navigation }) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-export class Profile extends Component<Props, State> {
-  state: State = {
-    currentUser: null,
-  };
+  useEffect(() => {
+    fetchData();
+  });
 
-  async componentDidMount() {
+  const fetchData = async () => {
     const userQuerySnapshot = await firebase
       .firestore()
       .collection('/users')
       .doc(firebase.auth().currentUser.uid)
       .get();
     if (userQuerySnapshot.exists) {
-      this.setState({ currentUser: userQuerySnapshot.data() as User });
+      setCurrentUser(userQuerySnapshot.data() as User);
     }
-  }
-
-  showHistory = () => {
-    this.props.navigation.push('HistoryList');
   };
 
-  logOut = async () => {
+  const showHistory = () => {
+    navigation.push('HistoryList');
+  };
+
+  const logOut = async () => {
     await firebase.auth().signOut();
   };
 
-  render() {
-    const { currentUser } = this.state;
-    if (currentUser === null) return null;
-    return (
-      <>
-        <View style={styles.viewContainer}>
-          <Avatar
-            rounded
-            source={{
-              uri: currentUser.photoUrl,
-            }}
-            size="medium"
-            containerStyle={styles.item}
-          />
-          <Text h4 style={[styles.item, styles.name]}>
-            {currentUser.name}
-          </Text>
-          <Button
-            title="Historique"
-            buttonStyle={styles.button}
-            containerStyle={styles.item}
-            titleStyle={styles.buttonText}
-            onPress={this.showHistory}
-          />
-          <Button
-            title="Déconnexion"
-            onPress={this.logOut}
-            buttonStyle={styles.button}
-            titleStyle={styles.logoutText}
-          ></Button>
-        </View>
-        <ProfileCoachContainer />
-      </>
-    );
-  }
-}
+  if (currentUser === null) return null;
+  return (
+    <>
+      <View style={styles.viewContainer}>
+        <Avatar
+          rounded
+          source={{
+            uri: currentUser.photoUrl,
+          }}
+          size="medium"
+          containerStyle={styles.item}
+        />
+        <Text h4 style={[styles.item, styles.name]}>
+          {currentUser.name}
+        </Text>
+        <Button
+          title="Historique"
+          buttonStyle={styles.button}
+          containerStyle={styles.item}
+          titleStyle={styles.buttonText}
+          onPress={showHistory}
+        />
+        <Button
+          title="Déconnexion"
+          onPress={logOut}
+          buttonStyle={styles.button}
+          titleStyle={styles.logoutText}
+        ></Button>
+      </View>
+      <ProfileCoachContainer />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   viewContainer: {

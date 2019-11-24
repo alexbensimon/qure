@@ -1,30 +1,27 @@
+import { isBefore, toDate } from 'date-fns';
 import firebase from 'firebase';
-import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View, ActivityIndicator } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { Coach } from '../Coach';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { HistoryChallenge } from './HistoryChallenge';
-import { Coach } from '../Coach';
-import { toDate, isBefore } from 'date-fns';
 
-type State = {
-  challengesTakenHistory: Array<ChallengeTakenType>;
-  isLoading: boolean;
-};
+export const HistoryList: FC = () => {
+  const [challengesTakenHistory, setChallengesTakenHistory] = useState<
+    Array<ChallengeTakenType>
+  >(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-export class HistoryList extends Component<{}, State> {
-  state: State = {
-    challengesTakenHistory: null,
-    isLoading: true,
-  };
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true);
+      await fetchData();
+      setIsLoading(false);
+    })();
+  }, []);
 
-  async componentDidMount() {
-    this.setState({ isLoading: true });
-    await this.fetchData();
-    this.setState({ isLoading: false });
-  }
-
-  fetchData = async () => {
+  const fetchData = async () => {
     const challengesTakenHistory: Array<ChallengeTakenType> = [];
     const collection = firebase
       .firestore()
@@ -61,33 +58,29 @@ export class HistoryList extends Component<{}, State> {
           : -1;
       },
     );
-
-    this.setState({ challengesTakenHistory: challengesTakenHistorySorted });
+    setChallengesTakenHistory(challengesTakenHistorySorted);
   };
 
-  render() {
-    const { challengesTakenHistory, isLoading } = this.state;
-    return isLoading ? (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
+  return isLoading ? (
+    <View style={styles.loaderContainer}>
+      <ActivityIndicator size="large" color={colors.primary} />
+    </View>
+  ) : (
+    <>
+      <View style={styles.viewContainer}>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+          {challengesTakenHistory.map(challengeTaken => (
+            <HistoryChallenge
+              key={challengeTaken.id}
+              challengeTaken={challengeTaken}
+            />
+          ))}
+        </ScrollView>
       </View>
-    ) : (
-      <>
-        <View style={styles.viewContainer}>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            {challengesTakenHistory.map(challengeTaken => (
-              <HistoryChallenge
-                key={challengeTaken.id}
-                challengeTaken={challengeTaken}
-              />
-            ))}
-          </ScrollView>
-        </View>
-        <Coach sentences={['Bienvenue dans ton historique !']} />
-      </>
-    );
-  }
-}
+      <Coach sentences={['Bienvenue dans ton historique !']} />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   loaderContainer: {
