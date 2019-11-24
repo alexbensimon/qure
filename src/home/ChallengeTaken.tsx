@@ -11,13 +11,13 @@ import {
   toDate,
 } from 'date-fns';
 import firebase from 'firebase';
-import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View, Alert } from 'react-native';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
+import { NavigationStackProp } from 'react-navigation-stack';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
-import { NavigationStackProp } from 'react-navigation-stack';
 
 type Props = {
   challengeTaken: ChallengeTakenType;
@@ -26,28 +26,44 @@ type Props = {
   navigation: NavigationStackProp;
 };
 
-type State = {
-  timeRemaining: string;
-  succeed: boolean;
-};
+export const RawChallengeTaken: FC<Props> = ({
+  challengeTaken,
+  failChallenge,
+  reload,
+  navigation,
+}) => {
+  const [timeRemaining, setTimeRemaining] = useState('');
+  const [succeed, setSucceed] = useState(false);
 
-class RawChallengeTaken extends Component<Props, State> {
-  state: State = {
-    timeRemaining: '',
-    succeed: false,
-  };
+  const interval = useRef<NodeJS.Timeout>(null);
 
-  interval: NodeJS.Timeout = null;
+  const succeedChallenge = useCallback(() => {
+    setSucceed(true);
+    // Update challenge
+    firebase
+      .firestore()
+      .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
+      .doc(challengeTaken.id)
+      .set({ succeed: true }, { merge: true });
+    // Increase my points
+    firebase
+      .firestore()
+      .collection('/users')
+      .doc(firebase.auth().currentUser.uid)
+      .update({
+        points: firebase.firestore.FieldValue.increment(challengeTaken.level),
+      });
+  }, [challengeTaken.id, challengeTaken.level]);
 
-  async componentDidMount() {
-    const startDate = toDate(this.props.challengeTaken.timestamp);
-    const endDate = addDays(startDate, this.props.challengeTaken.duration);
-    this.interval = setInterval(() => {
+  useEffect(() => {
+    const startDate = toDate(challengeTaken.timestamp);
+    const endDate = addDays(startDate, challengeTaken.duration);
+    interval.current = setInterval(() => {
       const now = toDate(Date.now());
 
       if (isAfter(now, endDate)) {
-        this.succeedChallenge();
-        clearInterval(this.interval);
+        succeedChallenge();
+        clearInterval(interval.current);
       }
 
       const daysRemaining = differenceInDays(endDate, now);
@@ -63,44 +79,23 @@ class RawChallengeTaken extends Component<Props, State> {
         endDateMinusDaysHoursMinutes,
         now,
       );
-      this.setState({
-        timeRemaining: `${daysRemaining}:${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`,
-      });
+      setTimeRemaining(
+        `${daysRemaining}:${hoursRemaining}:${minutesRemaining}:${secondsRemaining}`,
+      );
     }, 1000);
-  }
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [challengeTaken.timestamp, challengeTaken.duration, succeedChallenge]);
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  succeedChallenge = async () => {
-    this.setState({ succeed: true });
-    // Update challenge
-    firebase
-      .firestore()
-      .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
-      .doc(this.props.challengeTaken.id)
-      .set({ succeed: true }, { merge: true });
-    // Increase my points
-    firebase
-      .firestore()
-      .collection('/users')
-      .doc(firebase.auth().currentUser.uid)
-      .update({
-        points: firebase.firestore.FieldValue.increment(
-          this.props.challengeTaken.level,
-        ),
-      });
-  };
-
-  tryFailChallenge = () => {
+  const tryFailChallenge = () => {
     Alert.alert(
       'Challenge raté 😔',
       "As-tu vraiment raté ce challenge ? Tu ne gagneras donc pas de points mais rien ne t'empêche de recommencer ! Merci pour ton honnêteté.",
       [
         {
           text: "Oui j'ai raté",
-          onPress: this.props.failChallenge,
+          onPress: failChallenge,
         },
         {
           text: "Non promis je n'ai pas raté",
@@ -110,43 +105,39 @@ class RawChallengeTaken extends Component<Props, State> {
     );
   };
 
-  render() {
-    const { challengeTaken, reload, navigation } = this.props;
-    const { timeRemaining, succeed } = this.state;
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.push('HomeChallenge', {
-            challengeId: challengeTaken.challengeId,
-          });
-        }}
-      >
-        <View style={styles.card}>
-          {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
-          <Text style={styles.title}>{challengeTaken.title}</Text>
-          <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
-          {!succeed ? (
-            <Button
-              title="J'ai raté"
-              onPress={this.tryFailChallenge}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              titleStyle={styles.failButtonTitle}
-            ></Button>
-          ) : (
-            <Button
-              title="Bravo !"
-              onPress={reload}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.button}
-              titleStyle={styles.succeedButtonTitle}
-            ></Button>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push('HomeChallenge', {
+          challengeId: challengeTaken.challengeId,
+        });
+      }}
+    >
+      <View style={styles.card}>
+        {!succeed && <Text style={styles.time}>{timeRemaining}</Text>}
+        <Text style={styles.title}>{challengeTaken.title}</Text>
+        <Text style={styles.subTitle}>{challengeTaken.subTitle}</Text>
+        {!succeed ? (
+          <Button
+            title="J'ai raté"
+            onPress={tryFailChallenge}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            titleStyle={styles.failButtonTitle}
+          ></Button>
+        ) : (
+          <Button
+            title="Bravo !"
+            onPress={reload}
+            containerStyle={styles.buttonContainer}
+            buttonStyle={styles.button}
+            titleStyle={styles.succeedButtonTitle}
+          ></Button>
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export const ChallengeTaken = withNavigation(RawChallengeTaken);
 

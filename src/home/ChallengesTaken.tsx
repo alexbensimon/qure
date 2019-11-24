@@ -1,42 +1,40 @@
 import firebase from 'firebase';
-import React, { Component } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import { Button, Text } from 'react-native-elements';
+import {
+  NavigationEventSubscription,
+  NavigationInjectedProps,
+  withNavigation,
+} from 'react-navigation';
 import { colors } from '../colors';
 import { ChallengeTakenType } from '../globalTypes';
 import { ChallengeTaken } from './ChallengeTaken';
-import {
-  withNavigation,
-  NavigationInjectedProps,
-  NavigationEventSubscription,
-} from 'react-navigation';
 
 type Props = NavigationInjectedProps;
 
-type State = {
-  challengesTaken: Array<ChallengeTakenType>;
-  refreshing: boolean;
-};
+export const RawChallengesTaken: FC<Props> = ({ navigation }) => {
+  const [challengesTaken, setChallengesTaken] = useState<
+    Array<ChallengeTakenType>
+  >(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-class RawChallengesTaken extends Component<Props, State> {
-  state: State = {
-    refreshing: false,
-    challengesTaken: null,
-  };
+  const focusListener = useRef<NavigationEventSubscription>(null);
 
-  focusListener: NavigationEventSubscription = null;
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  async componentDidMount() {
-    this.focusListener = this.props.navigation.addListener('willFocus', () => {
-      this.fetchData();
+  useEffect(() => {
+    focusListener.current = navigation.addListener('willFocus', () => {
+      fetchData();
     });
-  }
+    return () => {
+      focusListener.current.remove();
+    };
+  }, [navigation]);
 
-  componentWillUnmount() {
-    this.focusListener.remove();
-  }
-
-  fetchData = async () => {
+  const fetchData = async () => {
     const querySnapshot = await firebase
       .firestore()
       .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
@@ -46,64 +44,56 @@ class RawChallengesTaken extends Component<Props, State> {
     querySnapshot.forEach(doc => {
       challengesTaken.push({ ...doc.data(), id: doc.id });
     });
-    this.setState({ challengesTaken });
+    setChallengesTaken(challengesTaken);
   };
 
-  handleRefresh = async () => {
-    this.setState({ refreshing: true });
-    await this.fetchData();
-    this.setState({ refreshing: false });
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
   };
 
-  failChallenge = async (id: string) => {
+  const failChallenge = async (id: string) => {
     await firebase
       .firestore()
       .collection(`/users/${firebase.auth().currentUser.uid}/challengesTaken`)
       .doc(id)
       .set({ succeed: false }, { merge: true });
-    this.fetchData();
+    fetchData();
   };
 
-  render() {
-    const { navigation } = this.props;
-    const { challengesTaken, refreshing } = this.state;
-
-    return challengesTaken === null ? null : (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={this.handleRefresh}
+  return challengesTaken === null ? null : (
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
+      <Text h1 style={styles.title}>
+        Défis en cours
+      </Text>
+      {challengesTaken.length > 0 ? (
+        challengesTaken.map(challengeTaken => (
+          <ChallengeTaken
+            key={challengeTaken.id}
+            challengeTaken={challengeTaken}
+            failChallenge={() => failChallenge(challengeTaken.id)}
+            reload={fetchData}
           />
-        }
-      >
-        <Text h1 style={styles.title}>
-          Défis en cours
-        </Text>
-        {challengesTaken.length > 0 ? (
-          challengesTaken.map(challengeTaken => (
-            <ChallengeTaken
-              key={challengeTaken.id}
-              challengeTaken={challengeTaken}
-              failChallenge={() => this.failChallenge(challengeTaken.id)}
-              reload={this.fetchData}
-            />
-          ))
-        ) : (
-          <>
-            <Button
-              title="Je veux relever un défi !"
-              onPress={() => navigation.navigate('Découvrir')}
-              buttonStyle={styles.button}
-              titleStyle={styles.buttonTitle}
-              containerStyle={styles.buttonContainer}
-            ></Button>
-          </>
-        )}
-      </ScrollView>
-    );
-  }
-}
+        ))
+      ) : (
+        <>
+          <Button
+            title="Je veux relever un défi !"
+            onPress={() => navigation.navigate('Découvrir')}
+            buttonStyle={styles.button}
+            titleStyle={styles.buttonTitle}
+            containerStyle={styles.buttonContainer}
+          ></Button>
+        </>
+      )}
+    </ScrollView>
+  );
+};
 
 export const ChallengesTaken = withNavigation(RawChallengesTaken);
 
