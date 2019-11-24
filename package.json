@@ -8,10 +8,10 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "date-fns": "^2.2.1",
+    "date-fns": "^2.8.1",
     "expo": "^35.0.0",
     "expo-facebook": "~7.0.0",
-    "firebase": "^6.4.2",
+    "firebase": "^7.5.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
@@ -38,7 +38,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "typescript": "^3.7.2"
   },
   "private": true
