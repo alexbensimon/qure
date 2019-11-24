@@ -26,7 +26,7 @@ type Props = {
   navigation: NavigationStackProp;
 };
 
-export const RawChallengeTaken: FC<Props> = ({
+const RawChallengeTaken: FC<Props> = ({
   challengeTaken,
   failChallenge,
   reload,

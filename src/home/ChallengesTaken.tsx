@@ -13,7 +13,7 @@ import { ChallengeTaken } from './ChallengeTaken';
 
 type Props = NavigationInjectedProps;
 
-export const RawChallengesTaken: FC<Props> = ({ navigation }) => {
+const RawChallengesTaken: FC<Props> = ({ navigation }) => {
   const [challengesTaken, setChallengesTaken] = useState<
     Array<ChallengeTakenType>
   >(null);
