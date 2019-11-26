@@ -10,7 +10,7 @@ import { CommunityCoachContainer } from './CommunityCoachContainer';
 
 export const Community: FC = () => {
   const currentUserId = firebase.auth().currentUser.uid;
-  const [users, setUsers] = useState<Array<User>>([]);
+  const [users, setUsers] = useState<Array<User & { position: number }>>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
@@ -24,6 +24,18 @@ export const Community: FC = () => {
     });
 
     const usersSorted = users.sort((a, b) => (b.points || 0) - (a.points || 0));
+    usersSorted[0].position = 1;
+    for (let i = 1; i < usersSorted.length; i++) {
+      const previousPosition = usersSorted[i - 1].position;
+      let currentPosition = 0;
+
+      if ((usersSorted[i].points || 0) === (usersSorted[i - 1].points || 0)) {
+        currentPosition = previousPosition;
+      } else {
+        currentPosition = previousPosition + 1;
+      }
+      usersSorted[i].position = currentPosition;
+    }
 
     setUsers(usersSorted);
   };
@@ -50,17 +62,17 @@ export const Community: FC = () => {
           <Text h1 style={styles.title}>
             Classement
           </Text>
-          {users.map((person, i) => (
+          {users.map(person => (
             <View style={styles.line} key={person.id}>
               <View style={styles.nameContainer}>
                 <Text
                   h4
                   style={[
-                    styles.item,
+                    styles.position,
                     person.id === currentUserId ? styles.textSelf : styles.text,
                   ]}
                 >
-                  {i + 1}.
+                  {person.position}.
                 </Text>
                 <Avatar
                   rounded
@@ -119,10 +131,13 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     flexDirection: 'row',
-    maxWidth: '70%',
+    maxWidth: '60%',
   },
   item: {
     marginRight: 10,
+  },
+  position: {
+    width: 50,
   },
   text: {
     color: colors.dark,
