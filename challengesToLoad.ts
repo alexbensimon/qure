@@ -1064,3 +1064,17 @@ export const challenges = [
     notificationEvening: ``,
   },
 ];
+
+export const emptyChallenge = {
+  topics: [``, ``],
+  title: ``,
+  subTitle: ``,
+  description: ``,
+  autoCompletion: false,
+  duration: 0,
+  level: 0,
+  rules: [``, ``, ``],
+  coachAfterSummit: ``,
+  notificationAfterCompletion: ``,
+  notificationEvening: ``,
+};
