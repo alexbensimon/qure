@@ -2,6 +2,10 @@
 
 Built with [Pierre Lahmi](https://www.linkedin.com/in/plahmi/).
 
+## Demo (in French 🇫🇷)
+
+[Video link](https://photos.app.goo.gl/ZWbQPzckPqjhQbBK6)
+
 ## Concept
 
 Do fun real-life challenges and follow your progress with your friends.
@@ -13,7 +17,3 @@ Do fun real-life challenges and follow your progress with your friends.
 - [React Navigation](https://reactnavigation.org/) - To manage routing.
 - [Firebase](https://firebase.google.com/) - To be used as a NoSQL database.
 - [Facebook Developer API](https://developers.facebook.com/docs/graph-api/) - To handle authentication.
-
-## Demo (in French 🇫🇷)
-
-[Video link](https://photos.app.goo.gl/ZWbQPzckPqjhQbBK6)
